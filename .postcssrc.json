@@ -1,12 +1,5 @@
 {
   "plugins": {
     "@tailwindcss/postcss": {}
-  },
-  "theme": {
-    "extend": {
-      "fontFamily": {
-        "sans": ["Nunito", "sans-serif"]
-      }
-    }
   }
 }
