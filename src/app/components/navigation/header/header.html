@@ -1,1 +1,86 @@
-<p>header works!</p>
+<header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+  <div class="container mx-auto">
+    <nav class="flex items-center justify-between px-4 py-3 relative">
+      <!-- Logo -->
+      <h1 class="font-bold text-xl text-green-900 md:absolute md:left-0 select-none">
+        Healthy Recipe Finder
+      </h1>
+
+      <!-- Mobile menu button -->
+      <button
+        (click)="toggleMenu()"
+        class="md:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none relative w-10 h-10 overflow-hidden cursor-pointer"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-label="Toggle menu"
+      >
+        <!-- Menu icon (three lines) -->
+        <svg
+          class="w-6 h-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out"
+          [class.opacity-0]="isMenuOpen"
+          [class.rotate-0]="!isMenuOpen"
+          [class.-rotate-90]="isMenuOpen"
+          [class.scale-0]="isMenuOpen"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+        <!-- Close icon (X) -->
+        <svg
+          class="w-6 h-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out"
+          [class.opacity-0]="!isMenuOpen"
+          [class.rotate-90]="!isMenuOpen"
+          [class.rotate-0]="isMenuOpen"
+          [class.scale-0]="!isMenuOpen"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <!-- Desktop navigation -->
+      <div class="hidden md:flex md:items-center md:gap-8 md:mx-auto">
+        <app-navbar></app-navbar>
+      </div>
+
+      <!-- Browse Recipes button -->
+      <button
+        class="hidden md:block bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors md:absolute md:right-4"
+      >
+        Browse Recipes
+      </button>
+
+      <!-- Mobile navigation -->
+      <div
+        class="fixed md:hidden top-[61px] right-0 bottom-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out"
+        [class.translate-x-0]="isMenuOpen"
+        [class.translate-x-full]="!isMenuOpen"
+      >
+        <div class="p-4 flex flex-col gap-4">
+          <app-navbar></app-navbar>
+          <button
+            class="bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors"
+          >
+            Browse Recipes
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Spacer to prevent content from being hidden under fixed header -->
+<div class="h-[61px]"></div>
