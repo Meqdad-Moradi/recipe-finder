@@ -199,7 +199,8 @@
 
       <!-- Browse Recipes button -->
       <button
-        class="hidden md:block bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors md:absolute md:right-4"
+        class="hidden md:block bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors md:absolute md:right-4 cursor-pointer"
+        [routerLink]="['/recipes']"
       >
         Browse Recipes
       </button>
@@ -214,6 +215,7 @@
           <app-navbar></app-navbar>
           <button
             class="bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors"
+            [routerLink]="['/recipes']"
           >
             Browse Recipes
           </button>
