@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SectionTitle } from '../section-title/section-title';
-import { Button } from "../button/button";
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-readyto-cook',
