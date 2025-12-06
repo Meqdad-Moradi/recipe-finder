@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ApiRecipes } from '../../../services/api-recipes';
 import { SectionTitle } from '../../apps/section-title/section-title';
 import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
+import { CustomSearch } from "../../apps/custom-search/custom-search";
 
 @Component({
   selector: 'app-recipes',
-  imports: [SectionTitle, DropdownControl],
+  imports: [SectionTitle, DropdownControl, CustomSearch],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })

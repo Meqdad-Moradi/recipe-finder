@@ -12,11 +12,15 @@
   </div>
 
   <!-- filter & search -->
-  <div class="flex items-center justify-between gap-8 mt-8">
+  <div class="flex flex-wrap items-center justify-between gap-8 mt-8">
     <div class="flex items-center gap-4">
       <app-dropdown-control [options]="prepTimeOptions"></app-dropdown-control>
       <app-dropdown-control [options]="cookTimeOptions"></app-dropdown-control>
     </div>
-    <div>search</div>
+
+    <!-- custom search -->
+    <div class="w-full max-w-65">
+      <app-custom-search></app-custom-search>
+    </div>
   </div>
 </section>
