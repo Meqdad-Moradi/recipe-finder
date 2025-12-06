@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ApiRecipes } from '../../../services/api-recipes';
+import { SectionTitle } from "../../apps/section-title/section-title";
 
 @Component({
   selector: 'app-recipes',
-  imports: [],
+  imports: [SectionTitle],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })
