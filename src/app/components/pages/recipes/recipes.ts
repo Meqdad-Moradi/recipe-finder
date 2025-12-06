@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ApiRecipes } from '../../../services/api-recipes';
-import { SectionTitle } from "../../apps/section-title/section-title";
+import { SectionTitle } from '../../apps/section-title/section-title';
+import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
 
 @Component({
   selector: 'app-recipes',
-  imports: [SectionTitle],
+  imports: [SectionTitle, DropdownControl],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })
@@ -12,11 +13,13 @@ export class Recipes implements OnInit {
   private apiRecipesService = inject(ApiRecipes);
 
   public recipes = this.apiRecipesService.recipes;
+  public prepTimeOptions = ['Max prep time', 'Min prep time'];
+  public cookTimeOptions = ['Max cook time', 'Min cook time'];
 
   ngOnInit(): void {
     this.apiRecipesService.getRecipes().subscribe((res) => {
       this.apiRecipesService.recipes.set(res);
-      console.log(res)
+      console.log(res);
     });
   }
 }

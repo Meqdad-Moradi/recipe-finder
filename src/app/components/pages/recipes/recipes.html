@@ -13,9 +13,9 @@
 
   <!-- filter & search -->
   <div class="flex items-center justify-between gap-8 mt-8">
-    <div class="flex items-center gap-8">
-      <div>dropdown</div>
-      <div>dropdown</div>
+    <div class="flex items-center gap-4">
+      <app-dropdown-control [options]="prepTimeOptions"></app-dropdown-control>
+      <app-dropdown-control [options]="cookTimeOptions"></app-dropdown-control>
     </div>
     <div>search</div>
   </div>
