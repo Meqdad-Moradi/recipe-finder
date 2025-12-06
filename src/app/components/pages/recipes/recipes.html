@@ -1,4 +1,4 @@
-<section class="max-w-4xl mx-auto mt-18">
+<section class="max-w-4xl mx-auto mt-18 mb-16">
   <!-- heading -->
   <div class="grid place-items-center">
     <app-section-title
@@ -23,4 +23,13 @@
       <app-custom-search></app-custom-search>
     </div>
   </div>
+
+  <!-- data -->
+  <article
+    class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
+  >
+    @for (recipe of recipes(); track recipe.id) {
+    <app-recipe [recipe]="recipe"></app-recipe>
+    }
+  </article>
 </section>
