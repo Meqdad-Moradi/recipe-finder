@@ -12,7 +12,7 @@
       <div
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-white text-sm font-semibold"
         [ngClass]="{
-          'bg-green-500': recipe.difficulty === 'Easy',
+          'bg-green-800': recipe.difficulty === 'Easy',
           'bg-amber-500': recipe.difficulty === 'Medium',
           'bg-red-500': recipe.difficulty === 'Hard'
         }"
@@ -97,7 +97,7 @@
   </div>
 
   <!-- Ingredients Section -->
-  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-green-500 mb-8">
+  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-green-800 mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Ingredients</h2>
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
       @for (ingredient of recipe.ingredients; track ingredient) {
@@ -105,19 +105,19 @@
         class="flex justify-between items-center p-3 bg-white rounded border border-gray-200 hover:shadow-sm transition-shadow"
       >
         <span class="font-medium text-gray-900">{{ ingredient }}</span>
-        <span class="text-green-500 text-xl font-bold">✓</span>
+        <span class="text-green-800 text-xl font-bold">✓</span>
       </li>
       }
     </ul>
   </div>
 
   <!-- Instructions Section -->
-  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-blue-500 mb-8">
+  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-blue-600 mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Instructions</h2>
     <ol class="flex flex-col gap-4 pl-6">
       @for (instruction of recipe.instructions; track $index) {
       <li class="text-gray-900 leading-relaxed">
-        <span class="text-blue-500 font-bold">{{ $index + 1 }}.</span> {{
+        <span class="text-blue-600 font-bold">{{ $index + 1 }}.</span> {{
         instruction }}
       </li>
       }
@@ -163,7 +163,7 @@
         [value]="review()"
         (input)="onReviewChange($event)"
         placeholder="Tell us what you think about this recipe..."
-        class="p-3 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-3 focus:ring-green-100 resize-none placeholder:text-gray-400"
+        class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-800 focus:ring-offset-1 resize-none placeholder:text-gray-400"
         rows="5"
       ></textarea>
       <div class="text-xs text-gray-500 text-right">
