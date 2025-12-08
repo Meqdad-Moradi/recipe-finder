@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { IRecipe } from '../../../modules/recipes-module';
-import { Button } from "../../../apps/button/button";
+import { Button } from '../../../apps/button/button';
 
 @Component({
   selector: 'app-recipe',
@@ -10,4 +10,12 @@ import { Button } from "../../../apps/button/button";
 })
 export class Recipe {
   readonly recipe = input.required<IRecipe>();
+  readonly review = output<IRecipe>();
+
+  /**
+   * reviewRecipe
+   */
+  public reviewRecipe(): void {
+    this.review.emit(this.recipe());
+  }
 }

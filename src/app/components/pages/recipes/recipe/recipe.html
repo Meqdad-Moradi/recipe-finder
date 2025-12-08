@@ -1,7 +1,7 @@
 <div class="grid gap-4 p-3 bg-gray-50 rounded-xl shadow-md">
   <!-- image -->
   <div class="overflow-hidden rounded-md">
-    <img src="{{recipe().image}}" alt="{{recipe().name}}" />
+    <img src="{{recipe().image}}" alt="{{recipe().name}}" loading="lazy" />
   </div>
 
   <!-- details -->
@@ -112,5 +112,9 @@
     </div>
   </div>
 
-  <app-button class="w-full" btnText="View Recipe"></app-button>
+  <app-button
+    class="w-full"
+    btnText="View Recipe"
+    (click)="reviewRecipe()"
+  ></app-button>
 </div>

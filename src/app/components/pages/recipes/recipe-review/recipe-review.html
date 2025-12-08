@@ -1,0 +1,191 @@
+@if (recipe) {
+<section class="max-w-4xl mx-auto px-4 mt-12 mb-16">
+  <!-- Recipe Details Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <!-- Left: Recipe Image -->
+    <div class="relative">
+      <img
+        [src]="recipe.image"
+        [alt]="recipe.name"
+        class="w-full h-auto rounded-lg shadow-md hover:shadow-lg transition-shadow"
+      />
+      <div
+        class="absolute top-4 right-4 px-3 py-1 rounded-full text-white text-sm font-semibold"
+        [ngClass]="{
+          'bg-green-500': recipe.difficulty === 'Easy',
+          'bg-amber-500': recipe.difficulty === 'Medium',
+          'bg-red-500': recipe.difficulty === 'Hard'
+        }"
+      >
+        {{ recipe.difficulty }}
+      </div>
+    </div>
+
+    <!-- Right: Recipe Details -->
+    <div class="flex flex-col gap-4">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+        {{ recipe.name }}
+      </h1>
+
+      <!-- Rating Display -->
+      <div
+        class="flex items-center gap-4 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400"
+      >
+        <div class="flex gap-1 text-2xl">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+          <span
+            [ngClass]="{
+              'text-amber-400': star <= recipe.rating,
+              'text-gray-300': star > recipe.rating
+            }"
+            >★</span
+          >
+          }
+        </div>
+        <span class="text-sm font-semibold text-amber-900">
+          {{ recipe.rating }} / 5 ({{ recipe.reviewCount }} reviews)
+        </span>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed">
+        {{ recipe.mealType.join(', ') || 'Recipe' }} • {{ recipe.cuisine }}
+      </p>
+
+      <!-- Recipe Meta Info -->
+      <div
+        class="flex flex-wrap items-center justify-around gap-3 p-2 bg-gray-50 rounded-lg"
+      >
+        <div class="flex items-center">
+          <span class="text-xs uppercase font-semibold text-gray-500"
+            >Servings</span
+          >
+          <span class="text-lg font-bold text-gray-900"
+            >{{ recipe.servings }}</span
+          >
+        </div>
+        <div class="flex items-center">
+          <span class="text-xs uppercase font-semibold text-gray-500"
+            >Prep Time</span
+          >
+          <span class="text-lg font-bold text-gray-900"
+            >{{ recipe.prepTimeMinutes }} min</span
+          >
+        </div>
+        <div class="flex items-center">
+          <span class="text-xs uppercase font-semibold text-gray-500"
+            >Cook Time</span
+          >
+          <span class="text-lg font-bold text-gray-900"
+            >{{ recipe.cookTimeMinutes }} min</span
+          >
+        </div>
+      </div>
+
+      <!-- Tags -->
+      @if (recipe.tags.length > 0) {
+      <div class="flex flex-wrap gap-2">
+        @for (tag of recipe.tags; track tag) {
+        <span
+          class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors"
+        >
+          {{ tag }}
+        </span>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Ingredients Section -->
+  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-green-500 mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Ingredients</h2>
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (ingredient of recipe.ingredients; track ingredient) {
+      <li
+        class="flex justify-between items-center p-3 bg-white rounded border border-gray-200 hover:shadow-sm transition-shadow"
+      >
+        <span class="font-medium text-gray-900">{{ ingredient }}</span>
+        <span class="text-green-500 text-xl font-bold">✓</span>
+      </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Instructions Section -->
+  <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-blue-500 mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Instructions</h2>
+    <ol class="flex flex-col gap-4 pl-6">
+      @for (instruction of recipe.instructions; track $index) {
+      <li class="text-gray-900 leading-relaxed">
+        <span class="text-blue-500 font-bold">{{ $index + 1 }}.</span> {{
+        instruction }}
+      </li>
+      }
+    </ol>
+  </div>
+
+  <!-- Review Section -->
+  <div class="p-8 bg-gray-50 rounded-lg border border-gray-200">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">Leave a Review</h2>
+
+    <!-- Star Rating -->
+    <div class="mb-8 flex flex-col gap-4">
+      <label class="font-semibold text-gray-900">Rate this recipe</label>
+      <div class="flex gap-2 text-3xl">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+        <button
+          class="transition-all duration-200 hover:scale-125"
+          [ngClass]="{
+            'text-amber-400': star <= (hoveredRating() || rating()),
+            'text-gray-300': star > (hoveredRating() || rating())
+          }"
+          (click)="setRating(star)"
+          (mouseenter)="setHoveredRating(star)"
+          (mouseleave)="setHoveredRating(0)"
+          type="button"
+        >
+          ★
+        </button>
+        }
+      </div>
+      @if (rating() > 0) {
+      <span class="text-sm text-gray-600">{{ rating() }} out of 5</span>
+      }
+    </div>
+
+    <!-- Review Text -->
+    <div class="mb-6 flex flex-col gap-2">
+      <label for="review-text" class="font-semibold text-gray-900"
+        >Share your thoughts</label
+      >
+      <textarea
+        id="review-text"
+        [value]="review()"
+        (input)="onReviewChange($event)"
+        placeholder="Tell us what you think about this recipe..."
+        class="p-3 border border-gray-300 rounded focus:outline-none focus:border-green-500 focus:ring-3 focus:ring-green-100 resize-none placeholder:text-gray-400"
+        rows="5"
+      ></textarea>
+      <div class="text-xs text-gray-500 text-right">
+        {{ review().length }} / 500
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <app-button
+      btnText="Submit Review"
+      [disabled]="rating() === 0 || !review().trim()"
+      (click)="submitReview()"
+    ></app-button>
+  </div>
+</section>
+} @else {
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="flex flex-col justify-center items-center gap-8 min-h-96">
+    <p class="text-lg text-gray-600 text-center">
+      No recipe selected. Please select a recipe to review.
+    </p>
+    <app-button (click)="goToRecipes()" btnText="Go to Recipes"></app-button>
+  </div>
+</div>
+}
