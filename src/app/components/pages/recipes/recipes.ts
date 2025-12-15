@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ApiRecipes } from '../../../services/api-recipes';
 import { SectionTitle } from '../../apps/section-title/section-title';
 import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
@@ -17,13 +17,23 @@ export class Recipes implements OnInit {
   private apiRecipesService = inject(ApiRecipes);
   private readonly router = inject(Router);
 
-  public recipes = this.apiRecipesService.recipes;
+  private recipes = this.apiRecipesService.recipes;
+
+  public filteredRecipes = signal<IRecipe[]>([]);
   public prepTimeOptions = ['Max prep time', 'Min prep time'];
   public cookTimeOptions = ['Max cook time', 'Min cook time'];
+
+  public selectedPrep = signal<string>('');
+  public selectedCook = signal<string>('');
+
+  private selectedPrepQuery = '';
+  private selectedCookQuery = '';
+  private searchQuery = '';
 
   ngOnInit(): void {
     this.apiRecipesService.getRecipes().subscribe((res) => {
       this.apiRecipesService.recipes.set(res);
+      this.filteredRecipes.set(res);
       console.log(res);
     });
   }
@@ -34,5 +44,47 @@ export class Recipes implements OnInit {
    */
   public reviewRecipe(recipe: IRecipe): void {
     this.router.navigate(['recipes', 'review'], { state: recipe });
+  }
+
+  /**
+   * onFilter
+   */
+  private onFilter(): void {
+    const searchQueries = this.searchQuery.trim().split(' ');
+
+    const filteredRecipes = this.recipes().filter((item) => {
+      return searchQueries.every((x) =>
+        item.name.toLocaleLowerCase().includes(x)
+      );
+    });
+
+    this.filteredRecipes.set(filteredRecipes);
+  }
+
+  /**
+   * onCookTimeFilter
+   * @param value string - cook selected query
+   */
+  public onCookTimeFilter(value: string): void {
+    this.selectedCookQuery = value;
+    this.onFilter();
+  }
+
+  /**
+   * onPrepFilter
+   * @param value string - prep selected query
+   */
+  public onPrepFilter(value: string): void {
+    this.selectedPrepQuery = value;
+    this.onFilter();
+  }
+
+  /**
+   * onSearchFilter
+   * @param value string - searchQuery
+   */
+  public onSearchFilter(value: string): void {
+    this.searchQuery = value;
+    this.onFilter();
   }
 }

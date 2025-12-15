@@ -14,13 +14,23 @@
   <!-- filter & search -->
   <div class="flex flex-wrap items-center justify-between gap-8 mt-8">
     <div class="flex items-center gap-4">
-      <app-dropdown-control [options]="prepTimeOptions"></app-dropdown-control>
-      <app-dropdown-control [options]="cookTimeOptions"></app-dropdown-control>
+      <app-dropdown-control
+        [options]="prepTimeOptions"
+        [selectValue]="selectedPrep()"
+        (selectValueChange)="onPrepFilter($event!)"
+      ></app-dropdown-control>
+      <app-dropdown-control
+        [options]="cookTimeOptions"
+        [selectValue]="selectedCook()"
+        (selectValueChange)="onCookTimeFilter($event!)"
+      ></app-dropdown-control>
     </div>
 
     <!-- custom search -->
     <div class="w-full max-w-65">
-      <app-custom-search></app-custom-search>
+      <app-custom-search
+        (searchQueryChange)="onSearchFilter($event!)"
+      ></app-custom-search>
     </div>
   </div>
 
@@ -28,7 +38,7 @@
   <article
     class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
   >
-    @for (recipe of recipes(); track recipe.id) {
+    @for (recipe of filteredRecipes(); track recipe.id) {
     <app-recipe [recipe]="recipe" (review)="reviewRecipe($event)"></app-recipe>
     }
   </article>
