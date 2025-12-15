@@ -34,7 +34,6 @@ export class Recipes implements OnInit {
     this.apiRecipesService.getRecipes().subscribe((res) => {
       this.apiRecipesService.recipes.set(res);
       this.filteredRecipes.set(res);
-      console.log(res);
     });
   }
 
