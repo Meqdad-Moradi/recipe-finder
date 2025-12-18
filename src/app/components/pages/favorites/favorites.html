@@ -1,0 +1,21 @@
+<section class="py-12">
+  <div class="max-w-4xl mx-auto">
+    <!-- heading -->
+    <app-section-heading
+      title="Your Favorite Recipes"
+      desc="A curated collection of delicious dishes you’ll love to cook and
+        share—comfort food, quick meals, and sweet treats all in one place."
+    ></app-section-heading>
+
+    <article
+      class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
+    >
+      @for (recipe of favoriteRecipes(); track recipe.id) {
+      <app-recipe
+        [recipe]="recipe"
+        (review)="reviewRecipe($event)"
+      ></app-recipe>
+      }
+    </article>
+  </div>
+</section>
