@@ -1,15 +1,15 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ApiRecipes } from '../../../services/api-recipes';
-import { SectionTitle } from '../../apps/section-title/section-title';
-import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
-import { CustomSearch } from '../../apps/custom-search/custom-search';
-import { Recipe } from './recipe/recipe';
-import { IRecipe } from '../../modules/recipes-module';
 import { Router } from '@angular/router';
+import { ApiRecipes } from '../../../services/api-recipes';
+import { CustomSearch } from '../../apps/custom-search/custom-search';
+import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
+import { SectionHeading } from '../../apps/section-heading/section-heading';
+import { IRecipe } from '../../modules/recipes-module';
+import { Recipe } from './recipe/recipe';
 
 @Component({
   selector: 'app-recipes',
-  imports: [SectionTitle, DropdownControl, CustomSearch, Recipe],
+  imports: [DropdownControl, CustomSearch, Recipe, SectionHeading],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })
