@@ -35,7 +35,11 @@
     class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
   >
     @for (recipe of filteredRecipes(); track recipe.id) {
-    <app-recipe [recipe]="recipe" (review)="reviewRecipe($event)"></app-recipe>
+    <app-recipe
+      [recipe]="recipe"
+      [isFavoriteIconVisible]="true"
+      (review)="reviewRecipe($event)"
+    ></app-recipe>
     }
   </article>
 </section>

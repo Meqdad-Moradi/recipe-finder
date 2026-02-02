@@ -1,7 +1,47 @@
 <div class="grid gap-4 p-3 bg-gray-50 rounded-xl shadow-md">
   <!-- image -->
-  <div class="overflow-hidden rounded-md">
+  <div class="relative overflow-hidden rounded-md">
     <img src="{{recipe().image}}" alt="{{recipe().name}}" loading="lazy" />
+
+    @if (isFavoriteIconVisible()) {
+    <!-- favorite button -->
+    <button
+      class="absolute top-3 right-3 flex items-center justify-center w-9 h-9 pt-0.5 rounded-full bg-white/90 border-none cursor-pointer transition-all duration-300 hover:bg-white hover:scale-110 hover:shadow-md active:scale-95"
+      title="Add to favorites"
+      (click)="toggleFavorite()"
+      type="button"
+    >
+      <!-- Outlined heart (not favorite) -->
+      @if (!isFavorite()) {
+      <svg
+        class="w-6 h-6 text-gray-400 transition-all duration-300"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        ></path>
+      </svg>
+      } @else {
+      <!-- Filled heart (favorite) -->
+      <svg
+        class="w-6 h-6 text-red-600 transition-all duration-300"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+      >
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        ></path>
+      </svg>
+      }
+    </button>
+    }
   </div>
 
   <!-- details -->

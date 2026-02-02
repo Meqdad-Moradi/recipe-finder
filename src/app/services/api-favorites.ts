@@ -18,16 +18,15 @@ export class ApiFavorites {
    * @returns Observable<IRecipe>
    */
   public addItemToFavorites(item: IRecipe): Observable<IRecipe> {
-    const url = `${this.baseUrl}/${item}`;
-    return this.http.post<IRecipe>(url, item);
+    return this.http.post<IRecipe>(this.baseUrl, item);
   }
 
   /**
-   *
-   * @param itemId string
+   * removeItemFromFavorites
+   * @param itemId number
    * @returns Observable<IRecipe>
    */
-  public removeItemFromFavorites(itemId: string): Observable<IRecipe> {
+  public removeItemFromFavorites(itemId: number): Observable<IRecipe> {
     const url = `${this.baseUrl}/${itemId}`;
     return this.http.delete<IRecipe>(url);
   }
