@@ -7,28 +7,23 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ApiFavorites {
-  private readonly baseUrl = 'http://localhost:3000/favorites';
+  private readonly baseUrl = 'http://localhost:3000/recipes';
   private readonly http = inject(HttpClient);
 
   public favoriteRecipes = signal<IRecipe[]>([]);
 
   /**
-   * addItemToFavorites
-   * @param item IRecipe
+   * toggleFavorite
+   * @param recipe IRecipe
+   * @param isFavorite boolean
    * @returns Observable<IRecipe>
    */
-  public addItemToFavorites(item: IRecipe): Observable<IRecipe> {
-    return this.http.post<IRecipe>(this.baseUrl, item);
-  }
-
-  /**
-   * removeItemFromFavorites
-   * @param itemId number
-   * @returns Observable<IRecipe>
-   */
-  public removeItemFromFavorites(itemId: number): Observable<IRecipe> {
-    const url = `${this.baseUrl}/${itemId}`;
-    return this.http.delete<IRecipe>(url);
+  public toggleFavorite(
+    recipe: IRecipe,
+    isFavorite: boolean,
+  ): Observable<IRecipe> {
+    const updateData = { isFavorite };
+    return this.http.patch<IRecipe>(`${this.baseUrl}/${recipe.id}`, updateData);
   }
 
   /**
@@ -36,6 +31,6 @@ export class ApiFavorites {
    * @returns Observable<IRecipe[]>
    */
   public getFavoriteItems(): Observable<IRecipe[]> {
-    return this.http.get<IRecipe[]>(this.baseUrl);
+    return this.http.get<IRecipe[]>(this.baseUrl + '?' + 'isFavorite=' + true);
   }
 }

@@ -15,4 +15,5 @@ export interface IRecipe {
   rating: number;
   reviewCount: number;
   mealType: string[];
+  isFavorite: boolean;
 }

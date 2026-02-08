@@ -25,34 +25,25 @@ export class Recipe {
 
   /**
    * toggleFavorite
-   * toggleFavorite - Add current recipe to favorites
+   * Toggle favorite state and update the recipe
    */
   public toggleFavorite(): void {
     // If the favorite icon is not visible, do nothing
     if (!this.isFavoriteIconVisible()) return;
 
-    if (!this.isFavorite()) {
-      this.apiFavoritesService.addItemToFavorites(this.recipe()).subscribe({
+    const newFavoriteState = !this.isFavorite();
+    this.apiFavoritesService
+      .toggleFavorite(this.recipe(), newFavoriteState)
+      .subscribe({
         next: () => {
-          this.isFavorite.set(true);
-          console.log('Recipe added to favorites:', this.recipe().name);
+          this.isFavorite.set(newFavoriteState);
+          console.log(
+            `Recipe ${newFavoriteState ? 'added to' : 'removed from'} favorites: ${this.recipe().name}`,
+          );
         },
         error: (err) => {
-          console.error('Error adding recipe to favorites:', err);
+          console.error('Error toggling favorite:', err);
         },
       });
-    } else {
-      this.apiFavoritesService
-        .removeItemFromFavorites(this.recipe().id)
-        .subscribe({
-          next: () => {
-            this.isFavorite.set(false);
-            console.log('Recipe removed from favorites:', this.recipe().name);
-          },
-          error: (err) => {
-            console.error('Error removing recipe from favorites:', err);
-          },
-        });
-    }
   }
 }
