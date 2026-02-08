@@ -5,6 +5,7 @@ import { Recipes } from './components/pages/recipes/recipes';
 import { RecipeReview } from './components/pages/recipes/recipe-review/recipe-review';
 import { Favorites } from './components/pages/favorites/favorites';
 import { About } from './components/pages/about/about';
+import { Guests } from './components/pages/guests/guests';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
       { path: 'recipes/review', component: RecipeReview, pathMatch: 'full' },
       { path: 'favorites', component: Favorites, pathMatch: 'full' },
       { path: 'about', component: About, pathMatch: 'full' },
+      { path: 'guests', component: Guests, pathMatch: 'full' },
     ],
   },
 ];

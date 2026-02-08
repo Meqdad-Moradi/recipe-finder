@@ -1,0 +1,81 @@
+<div
+  class="grid grid-cols-6 gap-4 p-4 border-b border-gray-200 items-center hover:bg-gray-50 transition-colors relative min-w-max"
+  [class.bg-gray-100]="!guest().isPresent"
+  [class.opacity-50]="!guest().isPresent"
+>
+  <div class="text-gray-900 font-medium">{{ guest().name }}</div>
+
+  <div class="text-center text-gray-900 font-medium">
+    {{ guest().guestCount }}
+  </div>
+
+  <div class="text-center text-gray-900 font-medium">
+    €{{ guest().foodPrice.toFixed(2) }}
+  </div>
+
+  <div class="text-center font-bold text-green-900">
+    €{{ getGuestTotalPrice(guest()).toFixed(2) }}
+  </div>
+
+  <button
+    (click)="onTogglePresence()"
+    class="px-3 py-1 rounded-lg font-semibold text-sm transition-all duration-300 cursor-pointer"
+    [ngClass]="{
+                'bg-green-100 text-green-900 hover:bg-green-200': guest().isPresent,
+                'bg-red-100 text-red-900 hover:bg-red-200': !guest().isPresent
+              }"
+  >
+    {{ guest().isPresent ? '✓ Present' : '✗ Absent' }}
+  </button>
+  <!-- Menu Button -->
+  <div class="relative ml-auto" data-menu-content>
+    <button
+      type="button"
+      (click)="onToggleMenu()"
+      data-menu-button
+      class="p-1 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-all duration-200 cursor-pointer"
+      title="More options"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12 8c1.1 0 2-0.9 2-2s-0.9-2-2-2-2 0.9-2 2 0.9 2 2 2zm0 2c-1.1 0-2 0.9-2 2s0.9 2 2 2 2-0.9 2-2-0.9-2-2-2zm0 6c-1.1 0-2 0.9-2 2s0.9 2 2 2 2-0.9 2-2-0.9-2-2-2z"
+        />
+      </svg>
+    </button>
+    <!-- Dropdown Menu -->
+    @if (openMenuId() === guest().id) {
+    <div
+      class="min-w-max absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+      data-menu-content
+    >
+      <button
+        type="button"
+        (click)="onRemoveGuest()"
+        data-menu-content
+        class="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors first:rounded-t-lg last:rounded-b-lg cursor-pointer"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          ></path>
+        </svg>
+        <span>Delete Guest</span>
+      </button>
+    </div>
+    }
+  </div>
+</div>

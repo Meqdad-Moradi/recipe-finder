@@ -1,0 +1,59 @@
+<section class="max-w-4xl mx-auto mt-12 mb-16">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- heading -->
+    <app-section-heading
+      title="Guest Management"
+      desc="Add guests, track attendance, and calculate total food costs for your event."
+    ></app-section-heading>
+
+    <!-- Add Guest Form -->
+    <app-add-guest-form (addGuest)="addGuest($event)"></app-add-guest-form>
+
+    <!-- Guests Grid -->
+    @if (guests().length > 0) {
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
+
+      <!-- Summary -->
+      <!-- sort and filter controls -->
+      <app-filter-sort
+        [first]="allGuests() + ' Guests'"
+        [second]="getPresentGuestCount() + ' Present'"
+        [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
+      ></app-filter-sort>
+
+      <div class="bg-white rounded-xl shadow-md">
+        <!-- Table Header -->
+        <div
+          class="grid grid-cols-6 gap-4 bg-green-50 p-4 font-semibold text-gray-700 border-b border-gray-200 min-w-max"
+        >
+          <div>Guest Name</div>
+          <div class="text-center">Guest Count</div>
+          <div class="text-center">Price/Person</div>
+          <div class="text-center">Total</div>
+          <div class="text-center">Status</div>
+        </div>
+        <!-- Guest Rows -->
+        @for (guest of guests(); track guest.id) {
+        <app-guest
+          [guest]="guest"
+          [openMenuId]="openMenuId()"
+          (togglePresent)="togglePresent($event)"
+          (removeGuest)="removeGuest($event)"
+          (toggleMenu)="toggleMenu($event)"
+        ></app-guest>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (guests().length === 0) {
+    <div class="text-center py-12">
+      <p class="text-gray-500 text-lg">
+        No guests added yet. Start by adding a guest using the form above.
+      </p>
+    </div>
+    }
+  </div>
+</section>
