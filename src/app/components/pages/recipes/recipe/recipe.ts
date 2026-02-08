@@ -1,4 +1,4 @@
-import { Component, input, output, inject, signal } from '@angular/core';
+import { Component, input, output, inject, model } from '@angular/core';
 import { IRecipe } from '../../../modules/recipes-module';
 import { Button } from '../../../apps/button/button';
 import { ApiFavorites } from '../../../../services/api-favorites';
@@ -10,11 +10,12 @@ import { ApiFavorites } from '../../../../services/api-favorites';
   styleUrl: './recipe.scss',
 })
 export class Recipe {
-  readonly recipe = input.required<IRecipe>();
-  readonly isFavoriteIconVisible = input<boolean>(false);
-  readonly review = output<IRecipe>();
   private readonly apiFavoritesService = inject(ApiFavorites);
-  readonly isFavorite = signal(false);
+
+  readonly recipe = model.required<IRecipe>();
+  readonly isFavoriteIconVisible = input<boolean>(false);
+
+  readonly review = output<IRecipe>();
 
   /**
    * reviewRecipe
@@ -31,12 +32,15 @@ export class Recipe {
     // If the favorite icon is not visible, do nothing
     if (!this.isFavoriteIconVisible()) return;
 
-    const newFavoriteState = !this.isFavorite();
+    const newFavoriteState = !this.recipe().isFavorite;
     this.apiFavoritesService
       .toggleFavorite(this.recipe(), newFavoriteState)
       .subscribe({
         next: () => {
-          this.isFavorite.set(newFavoriteState);
+          this.recipe.update((prev) => ({
+            ...prev,
+            isFavorite: newFavoriteState,
+          }));
           console.log(
             `Recipe ${newFavoriteState ? 'added to' : 'removed from'} favorites: ${this.recipe().name}`,
           );
