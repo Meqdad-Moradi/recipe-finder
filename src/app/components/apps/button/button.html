@@ -2,6 +2,7 @@
   class="cursor-pointer md:block bg-green-900 text-white rounded-md px-4 py-2 hover:bg-green-800 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
   [disabled]="disabled()"
   (click)="onClick()"
+  [type]="type()"
 >
   {{ btnText() }}
 </button>

@@ -9,6 +9,7 @@ import { Component, input, output } from '@angular/core';
 export class Button {
   readonly btnText = input.required<string>();
   readonly disabled = input<boolean>();
+  readonly type = input<string>('button');
   readonly click = output<void>();
 
   /**
