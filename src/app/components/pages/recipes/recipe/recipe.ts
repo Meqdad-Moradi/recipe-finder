@@ -31,7 +31,7 @@ export class Recipe {
     // If the favorite icon is not visible, do nothing
     if (!this.isFavoriteIconVisible()) return;
 
-    if (this.isFavorite()) {
+    if (!this.isFavorite()) {
       this.apiFavoritesService.addItemToFavorites(this.recipe()).subscribe({
         next: () => {
           this.isFavorite.set(true);
