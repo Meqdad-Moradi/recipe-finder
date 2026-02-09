@@ -11,6 +11,7 @@
           >Guest Name</label
         >
         <input
+          #nameInput
           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors placeholder:text-gray-400"
           type="text"
           formControlName="name"
@@ -54,14 +55,16 @@
         <label class="text-sm font-semibold text-gray-700 mb-2"
           >Food Price</label
         >
-        @if (!isEditingPrice()) {
         <div class="relative">
           <input
+            #foodPriceInput
             type="text"
-            [value]="fixedFoodPrice() + '€'"
-            readonly
-            class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed text-gray-800 font-semibold"
+            formControlName="foodPrice"
+            [readonly]="!isEditingPrice()"
+            class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 font-semibold focus:outline-none"
+            [ngClass]="!isEditingPrice() ? 'cursor-not-allowed':'focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors'"
           />
+          @if (!isEditingPrice()) {
           <button
             type="button"
             (click)="enableEditPrice()"
@@ -83,16 +86,7 @@
               ></path>
             </svg>
           </button>
-        </div>
-        } @else {
-        <div class="relative">
-          <input
-            type="number"
-            [(ngModel)]="tempFoodPrice"
-            min="0"
-            step="0.01"
-            class="w-full px-3 py-2 pr-14 border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors font-semibold"
-          />
+          } @else {
           <div class="absolute right-1 top-1/2 -translate-y-1/2 flex gap-1">
             <button
               type="button"
@@ -137,8 +131,8 @@
               </svg>
             </button>
           </div>
+          }
         </div>
-        }
       </div>
 
       <!-- Present State Toggle -->

@@ -52,7 +52,7 @@ export class Guests implements OnInit {
   private loadGuests(): void {
     this.guestApiService.getGuests().subscribe({
       next: (guests) => {
-        this.guests.set(guests);
+        this.guests.set(guests.reverse());
       },
       error: (error) => {
         console.error('Error loading guests:', error);
@@ -100,15 +100,13 @@ export class Guests implements OnInit {
     const newGuest: Omit<IGuest, 'id'> = {
       name: formValue.name,
       guestCount: Number(formValue.guestCount),
-      foodPrice: formValue.foodPrice,
+      foodPrice: Number(formValue.foodPrice),
       isPresent: formValue.isPresent,
     };
 
     this.guestApiService.addGuest(newGuest).subscribe({
       next: (guest) => {
-        this.guests.update((guests) => [...guests, guest]);
-        // Reset food price to current fixed price
-        // this.guestForm.get('foodPrice')?.setValue(this.fixedFoodPrice());
+        this.guests.update((guests) => [guest, ...guests]);
       },
       error: (error) => {
         console.error('Error adding guest:', error);

@@ -1,5 +1,12 @@
-import { Component, inject, output, signal } from '@angular/core';
-import { IGuest } from '../../../modules/guests-module';
+import {
+  Component,
+  ElementRef,
+  inject,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { NgClass } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -7,10 +14,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { IGuest } from '../../../modules/guests-module';
 
 @Component({
   selector: 'app-add-guest-form',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgClass],
   templateUrl: './add-guest-form.html',
   styleUrl: './add-guest-form.scss',
 })
@@ -22,30 +30,27 @@ export class AddGuestForm {
   public guestForm: FormGroup;
   public fixedFoodPrice = signal<number>(13);
   public isEditingPrice = signal<boolean>(false);
-  public tempFoodPrice: number = 13;
+
+  readonly foodPriceInput =
+    viewChild<ElementRef<HTMLInputElement>>('foodPriceInput');
+  readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
 
   constructor() {
     this.guestForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       guestCount: [2, [Validators.required, Validators.min(1)]],
-      foodPrice: [{ value: this.fixedFoodPrice(), disabled: true }],
+      foodPrice: [13, { disabled: true }],
       isPresent: [true],
     });
   }
 
   /**
-   * Set the fixed food price (for future admin settings)
-   */
-  public setFixedFoodPrice(price: number): void {
-    this.fixedFoodPrice.set(price);
-    this.guestForm.get('foodPrice')?.setValue(price);
-  }
-
-  /**
-   * Enable food price editing
+   * enableEditPrice
+   * Enable food price editing and focus the input field
    */
   public enableEditPrice(): void {
-    this.tempFoodPrice = this.fixedFoodPrice();
+    this.foodPriceInput()?.nativeElement?.focus();
+    this.foodPriceInput()?.nativeElement?.select();
     this.isEditingPrice.set(true);
   }
 
@@ -53,10 +58,8 @@ export class AddGuestForm {
    * Save the edited food price
    */
   public savePrice(): void {
-    if (this.tempFoodPrice > 0) {
-      this.setFixedFoodPrice(this.tempFoodPrice);
-      this.isEditingPrice.set(false);
-    }
+    this.fixedFoodPrice.set(Number(this.guestForm.get('foodPrice')?.value));
+    this.isEditingPrice.set(false);
   }
 
   /**
@@ -64,9 +67,13 @@ export class AddGuestForm {
    */
   public cancelEditPrice(): void {
     this.isEditingPrice.set(false);
-    this.tempFoodPrice = this.fixedFoodPrice();
   }
 
+  /**
+   * onSubmit
+   * @param e Event
+   * @returns void
+   */
   public onSubmit(e: Event): void {
     e.preventDefault();
 
@@ -75,16 +82,33 @@ export class AddGuestForm {
       return;
     }
 
-    const formValue = this.guestForm.value;
     const newGuest: IGuest = {
       id: 0, // ID will be set by the backend
-      name: formValue.name,
-      guestCount: formValue.guestCount,
-      foodPrice: formValue.foodPrice,
-      isPresent: formValue.isPresent,
+      name: this.guestForm?.value?.name,
+      guestCount: this.guestForm?.value?.guestCount,
+      foodPrice: this.guestForm?.value?.foodPrice,
+      isPresent: this.guestForm?.value?.isPresent,
     };
 
     // Emit the new guest to the parent component
     this.addGuest.emit(newGuest);
+
+    // Reset the form after submission
+    this.reset();
+  }
+
+  /**
+   * reset
+   * Reset the form to its initial state and focus the name input field
+   */
+  private reset(): void {
+    this.guestForm.reset({
+      name: '',
+      guestCount: 2,
+      foodPrice: this.fixedFoodPrice(),
+      isPresent: true,
+    });
+    this.isEditingPrice.set(false);
+    this.nameInput()?.nativeElement?.focus();
   }
 }
