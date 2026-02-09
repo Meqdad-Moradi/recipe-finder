@@ -4,5 +4,6 @@ export interface IGuest {
   guestCount: number;
   foodPrice: number;
   isPresent: boolean;
+  invited: boolean;
   gemeinde?: string;
 }

@@ -63,6 +63,7 @@ export class AddGuestForm {
       guestCount: [2, [Validators.required, Validators.min(1)]],
       foodPrice: [13, { disabled: true }],
       isPresent: [true],
+      invited: [false],
       gemeinde: ['', [Validators.required]],
     });
 
@@ -88,6 +89,7 @@ export class AddGuestForm {
       foodPrice: guest.foodPrice,
       isPresent: guest.isPresent,
       gemeinde: guest.gemeinde,
+      invited: guest.invited,
     });
     this.nameInput()?.nativeElement?.focus();
   }
@@ -147,6 +149,7 @@ export class AddGuestForm {
       foodPrice: this.guestForm?.value?.foodPrice,
       isPresent: this.guestForm?.value?.isPresent,
       gemeinde: this.guestForm?.value?.gemeinde,
+      invited: this.guestForm?.value?.invited,
     };
 
     // set the fixed food price
@@ -176,6 +179,7 @@ export class AddGuestForm {
       foodPrice: this.fixedFoodPrice(),
       isPresent: true,
       gemeinde: '',
+      invited: false,
     });
     this.isEditingPrice.set(false);
     this.isEditing.set(false);

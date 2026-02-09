@@ -16,13 +16,7 @@ import { Guest } from './guest/guest';
 
 @Component({
   selector: 'app-guests',
-  imports: [
-    CommonModule,
-    SectionHeading,
-    Guest,
-    AddGuestForm,
-    FilterSort,
-  ],
+  imports: [CommonModule, SectionHeading, Guest, AddGuestForm, FilterSort],
   templateUrl: './guests.html',
   styleUrl: './guests.scss',
 })
@@ -103,6 +97,7 @@ export class Guests implements OnInit {
       guestCount: Number(formValue.guestCount),
       foodPrice: Number(formValue.foodPrice),
       isPresent: formValue.isPresent,
+      invited: formValue.invited,
       gemeinde: formValue.gemeinde,
     };
 
@@ -191,6 +186,27 @@ export class Guests implements OnInit {
     if (!guest) return;
 
     const updatedGuest: IGuest = { ...guest, isPresent: !guest.isPresent };
+    this.guestApiService.updateGuest(updatedGuest).subscribe({
+      next: (updated) => {
+        this.guests.update((guests) =>
+          guests.map((g) => (g.id === id ? updated : g)),
+        );
+      },
+      error: (error) => {
+        console.error('Error updating guest:', error);
+      },
+    });
+  }
+
+  /**
+   * toggleInvited
+   * Toggle guest invited state and update in backend
+   */
+  public toggleInvited(id: number): void {
+    const guest = this.guests().find((g) => g.id === id);
+    if (!guest) return;
+
+    const updatedGuest: IGuest = { ...guest, invited: !guest.invited };
     this.guestApiService.updateGuest(updatedGuest).subscribe({
       next: (updated) => {
         this.guests.update((guests) =>

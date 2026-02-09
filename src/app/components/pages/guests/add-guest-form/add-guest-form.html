@@ -165,19 +165,37 @@
     </div>
 
     <!-- Row 3: Present State Toggle -->
-    <div class="mb-6">
-      <div class="flex items-center gap-2">
-        <input
-          type="checkbox"
-          formControlName="isPresent"
-          id="isPresent"
-          class="w-4 h-4 rounded cursor-pointer accent-green-900"
-        />
-        <label
-          for="isPresent"
-          class="text-sm font-semibold text-gray-700 cursor-pointer"
-          >Present</label
-        >
+    <div class="grid grid-cols-[auto_1fr] gap-4 mb-6">
+      <div class="mb-6">
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            formControlName="isPresent"
+            id="isPresent"
+            class="w-4 h-4 rounded cursor-pointer accent-green-900"
+          />
+          <label
+            for="isPresent"
+            class="text-sm font-semibold text-gray-700 cursor-pointer"
+            >Present</label
+          >
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            formControlName="invited"
+            id="invited"
+            class="w-4 h-4 rounded cursor-pointer accent-green-900"
+          />
+          <label
+            for="invited"
+            class="text-sm font-semibold text-gray-700 cursor-pointer"
+            >Invited</label
+          >
+        </div>
       </div>
     </div>
 

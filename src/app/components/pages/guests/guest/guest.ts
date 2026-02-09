@@ -16,6 +16,7 @@ export class Guest {
   readonly removeGuest = output<number>();
   readonly toggleMenu = output<number>();
   readonly editGuest = output<IGuest>();
+  readonly toggleInvited = output<number>();
 
   /**
    * getGuestTotalPrice
@@ -47,5 +48,13 @@ export class Guest {
    */
   public onEditGuest(): void {
     this.editGuest.emit(this.guest());
+  }
+
+  /**
+   * onToggleInvited
+   * Emit toggle invited event to parent
+   */
+  public onToggleInvited(): void {
+    this.toggleInvited.emit(this.guest().id);
   }
 }
