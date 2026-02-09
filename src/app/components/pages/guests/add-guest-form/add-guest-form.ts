@@ -58,7 +58,6 @@ export class AddGuestForm {
    * Save the edited food price
    */
   public savePrice(): void {
-    this.fixedFoodPrice.set(Number(this.guestForm.get('foodPrice')?.value));
     this.isEditingPrice.set(false);
   }
 
@@ -89,6 +88,9 @@ export class AddGuestForm {
       foodPrice: this.guestForm?.value?.foodPrice,
       isPresent: this.guestForm?.value?.isPresent,
     };
+
+    // set the fixed food price to the new guest
+    this.fixedFoodPrice.set(Number(newGuest.foodPrice));
 
     // Emit the new guest to the parent component
     this.addGuest.emit(newGuest);
