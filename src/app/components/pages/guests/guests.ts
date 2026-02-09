@@ -97,6 +97,15 @@ export class Guests implements OnInit {
    * Add guest to the backend
    */
   public addGuest(formValue: IGuest): void {
+    const isGeustExist = this.guests().some(
+      (g) => g.name.toLowerCase() === formValue.name.toLowerCase(),
+    );
+
+    if (isGeustExist) {
+      alert('Guest with this name already exists!');
+      return;
+    }
+
     const newGuest: Omit<IGuest, 'id'> = {
       name: formValue.name,
       guestCount: Number(formValue.guestCount),
