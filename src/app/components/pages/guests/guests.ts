@@ -27,6 +27,22 @@ export class Guests implements OnInit {
   public filteredGuests = this.guestApiService.guests;
   public openMenuId = signal<number | null>(null);
   public editingGuest = signal<IGuest | null>(null);
+  public selectedFilterValue = signal<string>('');
+
+  public gemeinden: string[] = [
+    'Serfaus',
+    'Prutz',
+    'Landeck',
+    'Zams',
+    'Imst',
+    'Imsterberg',
+    'Haiming',
+    'Telfs',
+    'Zirl',
+    'Innsbruck',
+    'Fritzens',
+    'Wien',
+  ];
 
   ngOnInit(): void {
     this.loadGuests();
@@ -336,6 +352,25 @@ export class Guests implements OnInit {
       this.guests().filter((guest) =>
         searchTerms.some((term) => guest.name.toLowerCase().includes(term)),
       ),
+    );
+  }
+
+  /**
+   * filterGuests
+   * Filter guests based on selected gemeinde
+   * @param gemeinde string
+   * @returns void
+   */
+  public filterGuests(gemeinde: string): void {
+    this.selectedFilterValue.set(gemeinde);
+
+    if (!gemeinde) {
+      this.filteredGuests.set(this.guests());
+      return;
+    }
+
+    this.filteredGuests.set(
+      this.guests().filter((guest) => guest.gemeinde === gemeinde),
     );
   }
 }

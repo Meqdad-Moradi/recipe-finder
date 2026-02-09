@@ -9,6 +9,7 @@
     <!-- Add Guest Form -->
     <app-add-guest-form
       [editingGuest]="editingGuest()"
+      [gemeinden]="gemeinden"
       (addGuest)="addGuest($event)"
       (updateGuest)="updateGuestData($event)"
       (cancel)="cancelEditGuest()"
@@ -25,7 +26,10 @@
         [first]="allGuests() + ' Guests'"
         [second]="getPresentGuestCount() + ' Present'"
         [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
+        [filterOptions]="gemeinden"
+        [selectedFilterValue]="selectedFilterValue()"
         (searchQueryChange)="searchGuest($event)"
+        (selectedFilterValueChange)="filterGuests($event)"
       ></app-filter-sort>
 
       <div class="bg-white rounded-xl shadow-md mt-2">

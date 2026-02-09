@@ -42,7 +42,7 @@
           id="gemeinde"
         >
           <option value="" disabled>Select Gemeinde</option>
-          @for (gemeinde of gemeinden; track gemeinde) {
+          @for (gemeinde of gemeinden(); track gemeinde) {
           <option [value]="gemeinde">{{ gemeinde }}</option>
           }
         </select>

@@ -7,5 +7,11 @@
     <span>{{third()}}</span>
   </div>
 
-  <app-custom-search [(searchQuery)]="searchQuery"></app-custom-search>
+  <div class="flex items-center justify-between gap-4">
+    <app-dropdown-control
+      [options]="filterOptions()"
+      [(selectValue)]="selectedFilterValue"
+    ></app-dropdown-control>
+    <app-custom-search [(searchQuery)]="searchQuery"></app-custom-search>
+  </div>
 </div>

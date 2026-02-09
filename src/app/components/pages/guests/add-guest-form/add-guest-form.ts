@@ -27,11 +27,12 @@ import { IGuest } from '../../../modules/guests-module';
 export class AddGuestForm {
   private readonly fb = inject(FormBuilder);
 
+  readonly editingGuest = input<IGuest | null>(null);
+  readonly gemeinden = input.required<string[]>();
+
   readonly addGuest = output<IGuest>();
   readonly updateGuest = output<IGuest>();
   readonly cancel = output<void>();
-
-  readonly editingGuest = input<IGuest | null>(null);
 
   public guestForm: FormGroup;
   public fixedFoodPrice = signal<number>(13);
@@ -41,21 +42,6 @@ export class AddGuestForm {
   readonly foodPriceInput =
     viewChild<ElementRef<HTMLInputElement>>('foodPriceInput');
   readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
-
-  public gemeinden: string[] = [
-    'Serfaus',
-    'Prutz',
-    'Landeck',
-    'Zams',
-    'Imst',
-    'Imsterberg',
-    'Haiming',
-    'Telfs',
-    'Zirl',
-    'Innsbruck',
-    'Fritzens',
-    'Wien',
-  ];
 
   constructor() {
     this.guestForm = this.fb.group({
