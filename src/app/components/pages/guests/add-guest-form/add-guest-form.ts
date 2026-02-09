@@ -65,6 +65,10 @@ export class AddGuestForm {
       isPresent: [true],
       invited: [false],
       gemeinde: ['', [Validators.required]],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^[\d\s\-\+\(\)]+$/)],
+      ],
     });
 
     // Watch for changes to editingGuest input
@@ -90,6 +94,7 @@ export class AddGuestForm {
       isPresent: guest.isPresent,
       gemeinde: guest.gemeinde,
       invited: guest.invited,
+      phone: guest.phone,
     });
     this.nameInput()?.nativeElement?.focus();
   }
@@ -150,6 +155,7 @@ export class AddGuestForm {
       isPresent: this.guestForm?.value?.isPresent,
       gemeinde: this.guestForm?.value?.gemeinde,
       invited: this.guestForm?.value?.invited,
+      phone: this.guestForm?.value?.phone,
     };
 
     // set the fixed food price
@@ -180,6 +186,7 @@ export class AddGuestForm {
       isPresent: true,
       gemeinde: '',
       invited: false,
+      phone: '',
     });
     this.isEditingPrice.set(false);
     this.isEditing.set(false);

@@ -17,7 +17,35 @@
     <!-- Guests Grid -->
     @if (guests().length > 0) {
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
+
+        <!-- Invite All Guests Button -->
+        <div class="mb-6 flex justify-between items-center">
+          <button
+            (click)="inviteAllGuests()"
+            [disabled]="guests().length === 0"
+            class="flex items-center gap-2 bg-green-900 text-white rounded-lg px-6 py-2 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold cursor-pointer"
+            title="Send birthday party invitation to all guests via WhatsApp"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+            🎉 Invite All to Birthday Party
+          </button>
+        </div>
+      </div>
 
       <!-- Summary -->
       <!-- sort and filter controls -->
@@ -27,7 +55,7 @@
         [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
       ></app-filter-sort>
 
-      <div class="bg-white rounded-xl shadow-md">
+      <div class="bg-white rounded-xl shadow-md mt-2">
         <!-- Table Header -->
         <div
           class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.666fr_0.55fr_0.2fr] gap-4 bg-green-50 p-4 font-semibold text-gray-700 border-b border-gray-200 min-w-max"

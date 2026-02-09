@@ -6,4 +6,5 @@ export interface IGuest {
   isPresent: boolean;
   invited: boolean;
   gemeinde?: string;
+  phone?: string;
 }

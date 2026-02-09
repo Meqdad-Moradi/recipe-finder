@@ -29,8 +29,8 @@
       </div>
     </div>
 
-    <!-- Row 2: Three Input Fields (Gemeinde, Guest Count, Food Price) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- Row 2: Three Input Fields (Gemeinde, Guest Count, Food Price, Phone) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <!-- Gemeinde Select -->
       <div class="flex flex-col relative">
         <label class="text-sm font-semibold text-gray-700 mb-2" for="gemeinde"
@@ -161,6 +161,35 @@
           </div>
           }
         </div>
+      </div>
+
+      <!-- Phone Input -->
+      <div class="flex flex-col relative">
+        <label class="text-sm font-semibold text-gray-700 mb-2" for="phone"
+          >Phone Number</label
+        >
+        <input
+          class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors placeholder:text-gray-400"
+          type="tel"
+          formControlName="phone"
+          placeholder="+41 79 123 45 67"
+          id="phone"
+        />
+        @if (guestForm.get('phone')?.hasError('required') &&
+        guestForm.get('phone')?.touched) {
+        <p
+          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+        >
+          Phone number is required
+        </p>
+        } @else if (guestForm.get('phone')?.hasError('pattern') &&
+        guestForm.get('phone')?.touched) {
+        <p
+          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+        >
+          Invalid phone format
+        </p>
+        }
       </div>
     </div>
 

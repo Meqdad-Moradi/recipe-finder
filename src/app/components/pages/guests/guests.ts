@@ -99,6 +99,7 @@ export class Guests implements OnInit {
       isPresent: formValue.isPresent,
       invited: formValue.invited,
       gemeinde: formValue.gemeinde,
+      phone: formValue.phone,
     };
 
     this.guestApiService.addGuest(newGuest).subscribe({
@@ -217,6 +218,89 @@ export class Guests implements OnInit {
         console.error('Error updating guest:', error);
       },
     });
+  }
+
+  /**
+   * inviteAllGuests
+   * Send WhatsApp invites to all guests with phone numbers
+   */
+  public inviteAllGuests(): void {
+    const guestsToInvite = this.guests().filter(
+      (guest) => guest.phone && guest.phone.trim() !== '',
+    );
+
+    if (guestsToInvite.length === 0) {
+      alert('No guests with phone numbers available for invitations.');
+      return;
+    }
+
+    const message = this.generateBirthdayMessage();
+    let invitedCount = 0;
+
+    guestsToInvite.forEach((guest) => {
+      const phoneNumber = this.normalizePhoneNumber(guest.phone || '');
+      if (phoneNumber) {
+        this.sendWhatsAppMessage(phoneNumber, message);
+        invitedCount++;
+      }
+    });
+
+    if (invitedCount > 0) {
+      alert(
+        `🎉 Birthday invitations sent to ${invitedCount} guest${invitedCount > 1 ? 's' : ''}!`,
+      );
+    }
+  }
+
+  /**
+   * generateBirthdayMessage
+   * Generate a friendly birthday party invitation message
+   */
+  private generateBirthdayMessage(): string {
+    return (
+      'Hey! 🎉\n\n' +
+      "You're invited to my birthday party! 🥳\n" +
+      'I would love to celebrate with you!\n' +
+      "Let me know if you can make it. Can't wait to see you! 🎈\n\n" +
+      'Cheers! 🍾'
+    );
+  }
+
+  /**
+   * normalizePhoneNumber
+   * Convert phone number to WhatsApp format (international format without + or special chars)
+   */
+  private normalizePhoneNumber(phone: string): string {
+    // Remove all non-digit characters except leading +
+    let normalized = phone.replace(/[^\d+]/g, '');
+
+    // If it starts with +, keep it; otherwise assume it's a valid international number
+    if (!normalized.startsWith('+')) {
+      // If no +, assume Austria number (+43)
+      if (normalized.startsWith('0')) {
+        normalized = '+43' + normalized.substring(1);
+      } else if (!normalized.startsWith('43')) {
+        normalized = '+43' + normalized;
+      } else {
+        normalized = '+' + normalized;
+      }
+    }
+
+    return normalized;
+  }
+
+  /**
+   * sendWhatsAppMessage
+   * Open WhatsApp with pre-filled message for a phone number
+   */
+  private sendWhatsAppMessage(phoneNumber: string, message: string): void {
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // Open in new window with small delay to allow multiple windows
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank', 'width=600,height=700');
+    }, 100);
   }
 
   /**
