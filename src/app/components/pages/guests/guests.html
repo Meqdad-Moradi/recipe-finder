@@ -15,37 +15,9 @@
     ></app-add-guest-form>
 
     <!-- Guests Grid -->
-    @if (guests().length > 0) {
+    @if (filteredGuests().length > 0) {
     <div class="mb-8">
-      <div class="flex items-center justify-between gap-4">
-        <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
-
-        <!-- Invite All Guests Button -->
-        <div class="mb-6 flex justify-between items-center">
-          <button
-            (click)="inviteAllGuests()"
-            [disabled]="guests().length === 0"
-            class="flex items-center gap-2 bg-green-900 text-white rounded-lg px-6 py-2 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold cursor-pointer"
-            title="Send birthday party invitation to all guests via WhatsApp"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              ></path>
-            </svg>
-            🎉 Invite All to Birthday Party
-          </button>
-        </div>
-      </div>
+      <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
 
       <!-- Summary -->
       <!-- sort and filter controls -->
@@ -53,6 +25,7 @@
         [first]="allGuests() + ' Guests'"
         [second]="getPresentGuestCount() + ' Present'"
         [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
+        (searchValue)="searchGuest($event)"
       ></app-filter-sort>
 
       <div class="bg-white rounded-xl shadow-md mt-2">
@@ -69,7 +42,7 @@
           <div>Status</div>
         </div>
         <!-- Guest Rows -->
-        @for (guest of guests(); track guest.id) {
+        @for (guest of filteredGuests(); track guest.id) {
         <app-guest
           [guest]="guest"
           [openMenuId]="openMenuId()"
@@ -82,10 +55,36 @@
         }
       </div>
     </div>
+
+    <!-- Invite All Guests Button -->
+    <div class="mb-6 flex justify-between items-center">
+      <button
+        (click)="inviteAllGuests()"
+        [disabled]="filteredGuests().length === 0"
+        class="flex items-center gap-2 bg-green-900 text-white rounded-lg px-6 py-2 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold cursor-pointer"
+        title="Send birthday party invitation to all guests via WhatsApp"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+          ></path>
+        </svg>
+        🎉 Invite All to Birthday Party
+      </button>
+    </div>
     }
 
     <!-- Empty State -->
-    @if (guests().length === 0) {
+    @if (filteredGuests().length === 0) {
     <div class="text-center py-12">
       <p class="text-gray-500 text-lg">
         No guests added yet. Start by adding a guest using the form above.

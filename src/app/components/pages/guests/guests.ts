@@ -23,7 +23,8 @@ import { Guest } from './guest/guest';
 export class Guests implements OnInit {
   private readonly guestApiService = inject(ApiGuests);
 
-  public guests = this.guestApiService.guests;
+  private guests = signal<IGuest[]>([]);
+  public filteredGuests = this.guestApiService.guests;
   public openMenuId = signal<number | null>(null);
   public editingGuest = signal<IGuest | null>(null);
 
@@ -38,7 +39,9 @@ export class Guests implements OnInit {
   private loadGuests(): void {
     this.guestApiService.getGuests().subscribe({
       next: (guests) => {
-        this.guests.set(guests.reverse());
+        const reversedGuests = guests.reverse();
+        this.guestApiService.guests.set(reversedGuests);
+        this.guests.set(reversedGuests);
       },
       error: (error) => {
         console.error('Error loading guests:', error);
@@ -104,7 +107,7 @@ export class Guests implements OnInit {
 
     this.guestApiService.addGuest(newGuest).subscribe({
       next: (guest) => {
-        this.guests.update((guests) => [guest, ...guests]);
+        this.guestApiService.guests.update((guests) => [guest, ...guests]);
       },
       error: (error) => {
         console.error('Error adding guest:', error);
@@ -119,7 +122,9 @@ export class Guests implements OnInit {
   public removeGuest(id: number): void {
     this.guestApiService.removeGuest(id).subscribe({
       next: () => {
-        this.guests.update((guests) => guests.filter((g) => g.id !== id));
+        this.guestApiService.guests.update((guests) =>
+          guests.filter((g) => g.id !== id),
+        );
       },
       error: (error) => {
         console.error('Error removing guest:', error);
@@ -167,7 +172,7 @@ export class Guests implements OnInit {
   public updateGuestData(updatedGuest: IGuest): void {
     this.guestApiService.updateGuest(updatedGuest).subscribe({
       next: (guest) => {
-        this.guests.update((guests) =>
+        this.guestApiService.guests.update((guests) =>
           guests.map((g) => (g.id === guest.id ? guest : g)),
         );
         this.editingGuest.set(null);
@@ -189,7 +194,7 @@ export class Guests implements OnInit {
     const updatedGuest: IGuest = { ...guest, isPresent: !guest.isPresent };
     this.guestApiService.updateGuest(updatedGuest).subscribe({
       next: (updated) => {
-        this.guests.update((guests) =>
+        this.guestApiService.guests.update((guests) =>
           guests.map((g) => (g.id === id ? updated : g)),
         );
       },
@@ -210,7 +215,7 @@ export class Guests implements OnInit {
     const updatedGuest: IGuest = { ...guest, invited: !guest.invited };
     this.guestApiService.updateGuest(updatedGuest).subscribe({
       next: (updated) => {
-        this.guests.update((guests) =>
+        this.guestApiService.guests.update((guests) =>
           guests.map((g) => (g.id === id ? updated : g)),
         );
       },
@@ -317,5 +322,24 @@ export class Guests implements OnInit {
     if (!isMenuButton && !isMenuContent) {
       this.closeMenu();
     }
+  }
+
+  /**
+   * searchGuest
+   * Filter guests based on search term (name)
+   * @param searchTerm string
+   */
+  public searchGuest(searchTerm: string): void {
+    const terms = searchTerm.toLowerCase().trim().split(' ');
+
+    this.filteredGuests.set(
+      this.guests().filter((guest) =>
+        terms.some((term) => guest.name.toLowerCase().includes(term)),
+      ),
+    );
+
+    console.log('Search term:', searchTerm);
+    console.log('Filtered guests:', this.filteredGuests());
+    console.log('All guests:', this.guests());
   }
 }

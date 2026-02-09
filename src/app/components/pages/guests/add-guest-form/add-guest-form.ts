@@ -150,8 +150,8 @@ export class AddGuestForm {
     const guestData: IGuest = {
       id: this.isEditing() ? this.editingGuest()?.id || 0 : 0,
       name: this.guestForm?.value?.name,
-      guestCount: this.guestForm?.value?.guestCount,
-      foodPrice: this.guestForm?.value?.foodPrice,
+      guestCount: Number(this.guestForm?.value?.guestCount),
+      foodPrice: Number(this.guestForm?.value?.foodPrice),
       isPresent: this.guestForm?.value?.isPresent,
       gemeinde: this.guestForm?.value?.gemeinde,
       invited: this.guestForm?.value?.invited,
