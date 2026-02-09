@@ -1,31 +1,22 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
+  HostListener,
   inject,
   OnInit,
   signal,
-  HostListener,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { SectionHeading } from '../../apps/section-heading/section-heading';
 import { ApiGuests } from '../../../services/api-guests';
-import { IGuest } from '../../modules/guests-module';
-import { Guest } from './guest/guest';
-import { AddGuestForm } from './add-guest-form/add-guest-form';
 import { FilterSort } from '../../apps/filter-sort/filter-sort';
+import { SectionHeading } from '../../apps/section-heading/section-heading';
+import { IGuest } from '../../modules/guests-module';
+import { AddGuestForm } from './add-guest-form/add-guest-form';
+import { Guest } from './guest/guest';
 
 @Component({
   selector: 'app-guests',
   imports: [
-    ReactiveFormsModule,
-    FormsModule,
     CommonModule,
     SectionHeading,
     Guest,
@@ -40,6 +31,7 @@ export class Guests implements OnInit {
 
   public guests = this.guestApiService.guests;
   public openMenuId = signal<number | null>(null);
+  public editingGuest = signal<IGuest | null>(null);
 
   ngOnInit(): void {
     this.loadGuests();
@@ -153,6 +145,41 @@ export class Guests implements OnInit {
    */
   public closeMenu(): void {
     this.openMenuId.set(null);
+  }
+
+  /**
+   * editGuest
+   * Handle guest edit action and set the guest for editing
+   */
+  public editGuest(guest: IGuest): void {
+    this.editingGuest.set(guest);
+    this.closeMenu();
+  }
+
+  /**
+   * cancelEditGuest
+   * Cancel editing and clear the editing guest
+   */
+  public cancelEditGuest(): void {
+    this.editingGuest.set(null);
+  }
+
+  /**
+   * updateGuestData
+   * Update guest data in the backend
+   */
+  public updateGuestData(updatedGuest: IGuest): void {
+    this.guestApiService.updateGuest(updatedGuest).subscribe({
+      next: (guest) => {
+        this.guests.update((guests) =>
+          guests.map((g) => (g.id === guest.id ? guest : g)),
+        );
+        this.editingGuest.set(null);
+      },
+      error: (error) => {
+        console.error('Error updating guest:', error);
+      },
+    });
   }
 
   /**

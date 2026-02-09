@@ -1,5 +1,5 @@
 <div
-  class="grid grid-cols-[1fr_0.5fr_0.5fr_0.5fr_1fr_0.55fr_0.5fr] gap-4 p-4 border-b border-gray-200 items-center hover:bg-gray-50 transition-colors relative min-w-max"
+  class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.55fr_0.2fr] gap-4 p-4 border-b border-gray-200 items-center hover:bg-gray-50 transition-colors relative min-w-max"
   [class.bg-gray-100]="!guest().isPresent"
   [class.opacity-50]="!guest().isPresent"
 >
@@ -55,9 +55,31 @@
     >
       <button
         type="button"
+        (click)="onEditGuest()"
+        data-menu-content
+        class="flex items-center gap-2 w-full px-4 py-2 text-blue-600 hover:bg-blue-50 transition-colors first:rounded-t-lg cursor-pointer"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+          ></path>
+        </svg>
+        <span>Edit Guest</span>
+      </button>
+      <button
+        type="button"
         (click)="onRemoveGuest()"
         data-menu-content
-        class="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors first:rounded-t-lg last:rounded-b-lg cursor-pointer"
+        class="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors last:rounded-b-lg cursor-pointer"
       >
         <svg
           class="w-4 h-4"

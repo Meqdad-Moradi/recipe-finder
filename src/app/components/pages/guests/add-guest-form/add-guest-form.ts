@@ -5,6 +5,8 @@ import {
   output,
   signal,
   viewChild,
+  input,
+  effect,
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import {
@@ -26,10 +28,15 @@ export class AddGuestForm {
   private readonly fb = inject(FormBuilder);
 
   readonly addGuest = output<IGuest>();
+  readonly updateGuest = output<IGuest>();
+  readonly cancel = output<void>();
+
+  readonly editingGuest = input<IGuest | null>(null);
 
   public guestForm: FormGroup;
   public fixedFoodPrice = signal<number>(13);
   public isEditingPrice = signal<boolean>(false);
+  public isEditing = signal<boolean>(false);
 
   readonly foodPriceInput =
     viewChild<ElementRef<HTMLInputElement>>('foodPriceInput');
@@ -58,6 +65,41 @@ export class AddGuestForm {
       isPresent: [true],
       gemeinde: ['', [Validators.required]],
     });
+
+    // Watch for changes to editingGuest input
+    effect(() => {
+      const guest = this.editingGuest();
+      if (guest) {
+        this.loadEditGuest(guest);
+      }
+    });
+  }
+
+  /**
+   * loadEditGuest
+   * Populate the form with guest data for editing
+   */
+  public loadEditGuest(guest: IGuest): void {
+    this.isEditing.set(true);
+    this.fixedFoodPrice.set(Number(guest.foodPrice));
+    this.guestForm.patchValue({
+      name: guest.name,
+      guestCount: guest.guestCount,
+      foodPrice: guest.foodPrice,
+      isPresent: guest.isPresent,
+      gemeinde: guest.gemeinde,
+    });
+    this.nameInput()?.nativeElement?.focus();
+  }
+
+  /**
+   * cancelEdit
+   * Cancel editing and reset the form
+   */
+  public cancelEdit(): void {
+    this.isEditing.set(false);
+    this.cancel.emit();
+    this.reset();
   }
 
   /**
@@ -86,6 +128,7 @@ export class AddGuestForm {
 
   /**
    * onSubmit
+   * Handle both adding new guest and updating existing guest
    * @param e Event
    * @returns void
    */
@@ -97,8 +140,8 @@ export class AddGuestForm {
       return;
     }
 
-    const newGuest: IGuest = {
-      id: 0, // ID will be set by the backend
+    const guestData: IGuest = {
+      id: this.isEditing() ? this.editingGuest()?.id || 0 : 0,
       name: this.guestForm?.value?.name,
       guestCount: this.guestForm?.value?.guestCount,
       foodPrice: this.guestForm?.value?.foodPrice,
@@ -106,11 +149,17 @@ export class AddGuestForm {
       gemeinde: this.guestForm?.value?.gemeinde,
     };
 
-    // set the fixed food price to the new guest
-    this.fixedFoodPrice.set(Number(newGuest.foodPrice));
+    // set the fixed food price
+    this.fixedFoodPrice.set(Number(guestData.foodPrice));
 
-    // Emit the new guest to the parent component
-    this.addGuest.emit(newGuest);
+    if (this.isEditing()) {
+      // Emit update event
+      this.updateGuest.emit(guestData);
+      this.isEditing.set(false);
+    } else {
+      // Emit add event
+      this.addGuest.emit(guestData);
+    }
 
     // Reset the form after submission
     this.reset();
@@ -129,6 +178,7 @@ export class AddGuestForm {
       gemeinde: '',
     });
     this.isEditingPrice.set(false);
+    this.isEditing.set(false);
     this.nameInput()?.nativeElement?.focus();
   }
 }

@@ -7,7 +7,12 @@
     ></app-section-heading>
 
     <!-- Add Guest Form -->
-    <app-add-guest-form (addGuest)="addGuest($event)"></app-add-guest-form>
+    <app-add-guest-form
+      [editingGuest]="editingGuest()"
+      (addGuest)="addGuest($event)"
+      (updateGuest)="updateGuestData($event)"
+      (cancel)="cancelEditGuest()"
+    ></app-add-guest-form>
 
     <!-- Guests Grid -->
     @if (guests().length > 0) {
@@ -25,7 +30,7 @@
       <div class="bg-white rounded-xl shadow-md">
         <!-- Table Header -->
         <div
-          class="grid grid-cols-[1fr_0.5fr_0.5fr_0.5fr_1fr_0.55fr_0.5fr] gap-4 bg-green-50 p-4 font-semibold text-gray-700 border-b border-gray-200 min-w-max"
+          class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.55fr_0.2fr] gap-4 bg-green-50 p-4 font-semibold text-gray-700 border-b border-gray-200 min-w-max"
         >
           <div>Guest Name</div>
           <div>Count</div>
@@ -42,6 +47,7 @@
           (togglePresent)="togglePresent($event)"
           (removeGuest)="removeGuest($event)"
           (toggleMenu)="toggleMenu($event)"
+          (editGuest)="editGuest($event)"
         ></app-guest>
         }
       </div>
