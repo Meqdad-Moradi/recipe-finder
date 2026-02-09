@@ -329,17 +329,13 @@ export class Guests implements OnInit {
    * Filter guests based on search term (name)
    * @param searchTerm string
    */
-  public searchGuest(searchTerm: string): void {
-    const terms = searchTerm.toLowerCase().trim().split(' ');
+  public searchGuest(val: string): void {
+    const searchTerms = val.toLowerCase().trim().split(' ');
 
     this.filteredGuests.set(
       this.guests().filter((guest) =>
-        terms.some((term) => guest.name.toLowerCase().includes(term)),
+        searchTerms.some((term) => guest.name.toLowerCase().includes(term)),
       ),
     );
-
-    console.log('Search term:', searchTerm);
-    console.log('Filtered guests:', this.filteredGuests());
-    console.log('All guests:', this.guests());
   }
 }

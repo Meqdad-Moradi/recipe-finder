@@ -25,7 +25,7 @@
         [first]="allGuests() + ' Guests'"
         [second]="getPresentGuestCount() + ' Present'"
         [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
-        (searchValue)="searchGuest($event)"
+        (searchQueryChange)="searchGuest($event)"
       ></app-filter-sort>
 
       <div class="bg-white rounded-xl shadow-md mt-2">
