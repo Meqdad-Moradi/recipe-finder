@@ -35,12 +35,28 @@ export class AddGuestForm {
     viewChild<ElementRef<HTMLInputElement>>('foodPriceInput');
   readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
 
+  public gemeinden: string[] = [
+    'Serfaus',
+    'Prutz',
+    'Landeck',
+    'Zams',
+    'Imst',
+    'Imsterberg',
+    'Haiming',
+    'Telfs',
+    'Zirl',
+    'Innsbruck',
+    'Fritzens',
+    'Wien',
+  ];
+
   constructor() {
     this.guestForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       guestCount: [2, [Validators.required, Validators.min(1)]],
       foodPrice: [13, { disabled: true }],
       isPresent: [true],
+      gemeinde: ['', [Validators.required]],
     });
   }
 
@@ -87,6 +103,7 @@ export class AddGuestForm {
       guestCount: this.guestForm?.value?.guestCount,
       foodPrice: this.guestForm?.value?.foodPrice,
       isPresent: this.guestForm?.value?.isPresent,
+      gemeinde: this.guestForm?.value?.gemeinde,
     };
 
     // set the fixed food price to the new guest
@@ -109,6 +126,7 @@ export class AddGuestForm {
       guestCount: 2,
       foodPrice: this.fixedFoodPrice(),
       isPresent: true,
+      gemeinde: '',
     });
     this.isEditingPrice.set(false);
     this.nameInput()?.nativeElement?.focus();

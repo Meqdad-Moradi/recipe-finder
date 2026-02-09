@@ -111,6 +111,7 @@ export class Guests implements OnInit {
       guestCount: Number(formValue.guestCount),
       foodPrice: Number(formValue.foodPrice),
       isPresent: formValue.isPresent,
+      gemeinde: formValue.gemeinde,
     };
 
     this.guestApiService.addGuest(newGuest).subscribe({
