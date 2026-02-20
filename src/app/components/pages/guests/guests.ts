@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   computed,
@@ -16,7 +16,7 @@ import { Guest } from './guest/guest';
 
 @Component({
   selector: 'app-guests',
-  imports: [CommonModule, SectionHeading, Guest, AddGuestForm, FilterSort],
+  imports: [SectionHeading, Guest, AddGuestForm, FilterSort],
   templateUrl: './guests.html',
   styleUrl: './guests.scss',
 })
