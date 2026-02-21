@@ -27,9 +27,12 @@
         [second]="getPresentGuestCount() + ' Present'"
         [third]="'€' + getGrandTotal().toFixed(2) + ' Total'"
         [filterOptions]="gemeinden"
+        [sortOptions]="sortOptions"
         [selectedFilterValue]="selectedFilterValue()"
+        [selectedSortValue]="selectedSortValue()"
         (searchQueryChange)="searchGuest($event)"
         (selectedFilterValueChange)="filterGuests($event)"
+        (selectedSortValueChange)="sortGuests($event)"
       ></app-filter-sort>
 
       <div class="bg-white rounded-xl shadow-md mt-2">

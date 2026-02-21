@@ -16,5 +16,7 @@ export class FilterSort {
   readonly third = input.required<string>();
   readonly searchQuery = model<string>('');
   readonly filterOptions = input.required<string[]>();
+  readonly sortOptions = input.required<string[]>();
   readonly selectedFilterValue = model.required<string>();
+  readonly selectedSortValue = model.required<string>();
 }

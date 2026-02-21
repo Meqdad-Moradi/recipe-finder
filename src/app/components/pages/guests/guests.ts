@@ -1,4 +1,3 @@
-
 import {
   Component,
   computed,
@@ -28,6 +27,7 @@ export class Guests implements OnInit {
   public openMenuId = signal<number | null>(null);
   public editingGuest = signal<IGuest | null>(null);
   public selectedFilterValue = signal<string>('');
+  public selectedSortValue = signal<string>('');
 
   public gemeinden: string[] = [
     'Serfaus',
@@ -43,6 +43,7 @@ export class Guests implements OnInit {
     'Fritzens',
     'Wien',
   ];
+  public sortOptions: string[] = ['Name', 'Guest Count', 'Food Price'];
 
   ngOnInit(): void {
     this.loadGuests();
@@ -372,5 +373,27 @@ export class Guests implements OnInit {
     this.filteredGuests.set(
       this.guests().filter((guest) => guest.gemeinde === gemeinde),
     );
+  }
+
+  /**
+   * sortGuests
+   * Sort guests based on selected sort option (Name, Guest Count, Food Price)
+   * @param sortBy string - selected sort option
+   */
+  public sortGuests(sortBy: string): void {
+    this.selectedSortValue.set(sortBy);
+
+    this.filteredGuests.update((guests) => {
+      return guests.sort((a, b) => {
+        if (sortBy === this.sortOptions[0]) {
+          return a.name.localeCompare(b.name);
+        } else if (sortBy === this.sortOptions[1]) {
+          return b.guestCount - a.guestCount; // Descending order
+        } else if (sortBy === this.sortOptions[2]) {
+          return b.foodPrice - a.foodPrice; // Descending order
+        }
+        return 0;
+      });
+    });
   }
 }
