@@ -1,0 +1,17 @@
+<div class="loading-wrapper">
+  <div class="loading-container" [class]="'size-' + size()">
+    <!-- Loading Message with Dots -->
+    @if (message()) {
+    <div class="loading-message">
+      <div class="message-content">
+        <p>{{ message() }}</p>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

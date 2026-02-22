@@ -1,15 +1,16 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiRecipes } from '../../../services/api-recipes';
 import { CustomSearch } from '../../apps/custom-search/custom-search';
 import { DropdownControl } from '../../apps/dropdown-control/dropdown-control';
 import { SectionHeading } from '../../apps/section-heading/section-heading';
+import { Loading } from '../../apps/loading/loading';
 import { IRecipe } from '../../modules/recipes-module';
 import { Recipe } from './recipe/recipe';
 
 @Component({
   selector: 'app-recipes',
-  imports: [DropdownControl, CustomSearch, Recipe, SectionHeading],
+  imports: [DropdownControl, CustomSearch, Recipe, SectionHeading, Loading],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })
@@ -20,18 +21,26 @@ export class Recipes implements OnInit {
   private recipes = this.apiRecipesService.recipes;
 
   public filteredRecipes = signal<IRecipe[]>([]);
+  public isLoading = signal<boolean>(false);
   public prepTimeOptions = ['Max prep time', 'Min prep time'];
   public cookTimeOptions = ['Max cook time', 'Min cook time'];
 
   public selectedPrep = signal<string>('');
   public selectedCook = signal<string>('');
-
-  private selectedPrepQuery = '';
-  private selectedCookQuery = '';
   private searchQuery = '';
 
   ngOnInit(): void {
+    this.getRecipes();
+  }
+
+  /**
+   * getRecipes
+   * fetches recipes from the API and updates the state accordingly
+   */
+  private getRecipes(): void {
+    this.isLoading.set(true);
     this.apiRecipesService.getRecipes().subscribe((res) => {
+      this.isLoading.set(false);
       this.apiRecipesService.recipes.set(res);
       this.filteredRecipes.set(res);
     });
@@ -46,36 +55,41 @@ export class Recipes implements OnInit {
   }
 
   /**
-   * onFilter
+   * onSort
    */
-  private onFilter(): void {
-    const searchQueries = this.searchQuery.trim().split(' ');
+  private onSort(option: string): void {
+    const optionLower = option.toLowerCase();
 
-    const filteredRecipes = this.recipes().filter((item) => {
-      return searchQueries.every((x) =>
-        item.name.toLocaleLowerCase().includes(x)
-      );
+    this.filteredRecipes.update((recipes) => {
+      return [...recipes].sort((a, b) => {
+        if (optionLower === 'max prep time') {
+          return b.prepTimeMinutes - a.prepTimeMinutes;
+        } else if (optionLower === 'min prep time') {
+          return a.prepTimeMinutes - b.prepTimeMinutes;
+        } else if (optionLower === 'max cook time') {
+          return b.cookTimeMinutes - a.cookTimeMinutes;
+        } else if (optionLower === 'min cook time') {
+          return a.cookTimeMinutes - b.cookTimeMinutes;
+        }
+        return 0;
+      });
     });
-
-    this.filteredRecipes.set(filteredRecipes);
   }
 
   /**
-   * onCookTimeFilter
+   * onCookTimeSort
    * @param value string - cook selected query
    */
-  public onCookTimeFilter(value: string): void {
-    this.selectedCookQuery = value;
-    this.onFilter();
+  public onCookTimeSort(value: string): void {
+    this.onSort(value);
   }
 
   /**
-   * onPrepFilter
+   * onPrepSort
    * @param value string - prep selected query
    */
-  public onPrepFilter(value: string): void {
-    this.selectedPrepQuery = value;
-    this.onFilter();
+  public onPrepSort(value: string): void {
+    this.onSort(value);
   }
 
   /**
@@ -84,6 +98,15 @@ export class Recipes implements OnInit {
    */
   public onSearchFilter(value: string): void {
     this.searchQuery = value;
-    this.onFilter();
+    const searchQueries = this.searchQuery.trim().split(' ');
+
+    this.filteredRecipes.update(() => {
+      return this.recipes().filter((recipe) => {
+        const recipeName = recipe.name.toLowerCase();
+        return searchQueries.every((query) =>
+          recipeName.includes(query.toLowerCase()),
+        );
+      });
+    });
   }
 }

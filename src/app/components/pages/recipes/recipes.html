@@ -8,17 +8,19 @@
   ></app-section-heading>
 
   <!-- filter & search -->
-  <div class="flex flex-wrap items-center justify-between gap-8 mt-8">
+  <div
+    class="flex flex-wrap items-center justify-between gap-8 mt-8 border-b border-gray-300 pb-2"
+  >
     <div class="flex items-center gap-4">
       <app-dropdown-control
         [options]="prepTimeOptions"
         [selectValue]="selectedPrep()"
-        (selectValueChange)="onPrepFilter($event!)"
+        (selectValueChange)="onPrepSort($event!)"
       ></app-dropdown-control>
       <app-dropdown-control
         [options]="cookTimeOptions"
         [selectValue]="selectedCook()"
-        (selectValueChange)="onCookTimeFilter($event!)"
+        (selectValueChange)="onCookTimeSort($event!)"
       ></app-dropdown-control>
     </div>
 
@@ -31,15 +33,25 @@
   </div>
 
   <!-- data -->
-  <article
-    class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
-  >
-    @for (recipe of filteredRecipes(); track recipe.id) {
-    <app-recipe
-      [recipe]="recipe"
-      [isFavoriteIconVisible]="true"
-      (review)="reviewRecipe($event)"
-    ></app-recipe>
-    }
-  </article>
+  @if (!isLoading()) {
+    <article
+      class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
+    >
+      @for (recipe of filteredRecipes(); track recipe.id) {
+        <app-recipe
+          [recipe]="recipe"
+          [isFavoriteIconVisible]="true"
+          (review)="reviewRecipe($event)"
+        ></app-recipe>
+      } @empty {
+        <p class="text-center w-full col-span-3 text-gray-600">
+          Nothing found...
+        </p>
+      }
+    </article>
+  } @else {
+    <div class="mt-8">
+      <app-loading></app-loading>
+    </div>
+  }
 </section>
