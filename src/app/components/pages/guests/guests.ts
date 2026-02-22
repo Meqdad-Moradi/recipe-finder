@@ -50,6 +50,7 @@ export class Guests implements OnInit {
     'Wien',
   ];
   public sortOptions: string[] = ['Name', 'Guest Count', 'Food Price'];
+  private searchTerms = signal<string[]>([]);
 
   ngOnInit(): void {
     this.loadGuests();
@@ -370,13 +371,8 @@ export class Guests implements OnInit {
    * @param searchTerm string
    */
   public searchGuest(val: string): void {
-    const searchTerms = val.toLowerCase().trim().split(' ');
-
-    this.filteredGuests.set(
-      this.guests().filter((guest) =>
-        searchTerms.some((term) => guest.name.toLowerCase().includes(term)),
-      ),
-    );
+    this.searchTerms.set(val.toLowerCase().trim().split(' '));
+    this.filterAllGuests();
   }
 
   /**
@@ -387,14 +383,34 @@ export class Guests implements OnInit {
    */
   public filterGuests(gemeinde: string): void {
     this.selectedFilterValue.set(gemeinde);
+    this.filterAllGuests();
+  }
 
-    if (!gemeinde) {
+  /**
+   * filterAllGuests
+   * Filter guests based on search terms and selected gemeinde
+   * @returns void
+   */
+  private filterAllGuests(): void {
+    if (!this.selectedFilterValue() && !this.searchTerms().length) {
       this.filteredGuests.set(this.guests());
       return;
     }
 
-    this.filteredGuests.set(
-      this.guests().filter((guest) => guest.gemeinde === gemeinde),
+    this.filteredGuests.update(() =>
+      this.guests().filter((guest) => {
+        // Check if guest name includes any of the search terms
+        const matchSearch = this.searchTerms().every((term) =>
+          guest.name.toLowerCase().includes(term),
+        );
+        // Check if guest's gemeinde matches the selected filter or if no filter is selected
+        const matchGemeinde =
+          guest.gemeinde?.toLowerCase() ===
+            this.selectedFilterValue().toLowerCase() ||
+          this.selectedFilterValue() === '';
+
+        return matchSearch && matchGemeinde;
+      }),
     );
   }
 
