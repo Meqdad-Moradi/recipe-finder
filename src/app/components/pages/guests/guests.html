@@ -6,17 +6,25 @@
       desc="Add guests, track attendance, and calculate total food costs for your event."
     ></app-section-heading>
 
+    <!-- toggel show add form -->
+    <app-button
+      [btnText]="formButtonText()"
+      classes="mb-10"
+      (click)="onToggleShowForm()"
+    ></app-button>
+
     <!-- Add Guest Form -->
-    <app-add-guest-form
-      [editingGuest]="editingGuest()"
-      [gemeinden]="gemeinden"
-      (addGuest)="addGuest($event)"
-      (updateGuest)="updateGuestData($event)"
-      (cancel)="cancelEditGuest()"
-    ></app-add-guest-form>
+    @if (isFormShowing()) {
+      <app-add-guest-form
+        [editingGuest]="editingGuest()"
+        [gemeinden]="gemeinden"
+        (addGuest)="addGuest($event)"
+        (updateGuest)="updateGuestData($event)"
+        (cancel)="cancelEditGuest()"
+      ></app-add-guest-form>
+    }
 
     <!-- Guests Grid -->
-    @if (filteredGuests().length > 0) {
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
 
@@ -48,17 +56,27 @@
           <div>Invited</div>
           <div>Status</div>
         </div>
-        <!-- Guest Rows -->
-        @for (guest of filteredGuests(); track guest.id) {
-        <app-guest
-          [guest]="guest"
-          [openMenuId]="openMenuId()"
-          (togglePresent)="togglePresent($event)"
-          (removeGuest)="removeGuest($event)"
-          (toggleMenu)="toggleMenu($event)"
-          (editGuest)="editGuest($event)"
-          (toggleInvited)="toggleInvited($event)"
-        ></app-guest>
+        @if (!isLoading()) {
+          <!-- Guest Rows -->
+          @for (guest of filteredGuests(); track guest.id) {
+            <app-guest
+              [guest]="guest"
+              [openMenuId]="openMenuId()"
+              (togglePresent)="togglePresent($event)"
+              (removeGuest)="removeGuest($event)"
+              (toggleMenu)="toggleMenu($event)"
+              (editGuest)="editGuest($event)"
+              (toggleInvited)="toggleInvited($event)"
+            ></app-guest>
+          } @empty {
+            <p class="text-center w-full col-span-3 text-gray-600 py-4">
+              Nothing found...
+            </p>
+          }
+        } @else {
+          <div class="py-4">
+            <app-loading></app-loading>
+          </div>
         }
       </div>
     </div>
@@ -88,15 +106,5 @@
         🎉 Invite All to Birthday Party
       </button>
     </div>
-    }
-
-    <!-- Empty State -->
-    @if (filteredGuests().length === 0) {
-    <div class="text-center py-12">
-      <p class="text-gray-500 text-lg">
-        No guests added yet. Start by adding a guest using the form above.
-      </p>
-    </div>
-    }
   </div>
 </section>

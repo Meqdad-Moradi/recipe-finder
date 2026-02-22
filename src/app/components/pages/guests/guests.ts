@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   HostListener,
@@ -12,12 +13,15 @@ import { SectionHeading } from '../../apps/section-heading/section-heading';
 import { IGuest } from '../../modules/guests-module';
 import { AddGuestForm } from './add-guest-form/add-guest-form';
 import { Guest } from './guest/guest';
+import { Loading } from '../../apps/loading/loading';
+import { Button } from '../../apps/button/button';
 
 @Component({
   selector: 'app-guests',
-  imports: [SectionHeading, Guest, AddGuestForm, FilterSort],
+  imports: [SectionHeading, Guest, AddGuestForm, FilterSort, Loading, Button],
   templateUrl: './guests.html',
   styleUrl: './guests.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Guests implements OnInit {
   private readonly guestApiService = inject(ApiGuests);
@@ -28,6 +32,8 @@ export class Guests implements OnInit {
   public editingGuest = signal<IGuest | null>(null);
   public selectedFilterValue = signal<string>('');
   public selectedSortValue = signal<string>('');
+  public isLoading = signal<boolean>(false);
+  public isFormShowing = signal<boolean>(false);
 
   public gemeinden: string[] = [
     'Serfaus',
@@ -54,14 +60,17 @@ export class Guests implements OnInit {
    * Load all guests from the backend
    */
   private loadGuests(): void {
+    this.isLoading.set(true);
     this.guestApiService.getGuests().subscribe({
       next: (guests) => {
+        this.isLoading.set(false);
         const reversedGuests = guests.reverse();
         this.guestApiService.guests.set(reversedGuests);
         this.guests.set(reversedGuests);
       },
       error: (error) => {
         console.error('Error loading guests:', error);
+        this.isLoading.set(false);
       },
     });
   }
@@ -77,6 +86,20 @@ export class Guests implements OnInit {
         return total + guest.guestCount * guest.foodPrice;
       }, 0);
   });
+
+  /**
+   * formButtonText
+   */
+  public formButtonText = computed(() =>
+    this.isFormShowing() ? 'Hide Form' : 'Add New Guest',
+  );
+
+  /**
+   * onToggleShowForm
+   */
+  public onToggleShowForm(): void {
+    this.isFormShowing.set(!this.isFormShowing());
+  }
 
   /**
    * getPresentGuestCount

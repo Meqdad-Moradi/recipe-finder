@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiRecipes } from '../../../services/api-recipes';
 import { CustomSearch } from '../../apps/custom-search/custom-search';
@@ -7,6 +7,7 @@ import { SectionHeading } from '../../apps/section-heading/section-heading';
 import { Loading } from '../../apps/loading/loading';
 import { IRecipe } from '../../modules/recipes-module';
 import { Recipe } from './recipe/recipe';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-recipes',
@@ -15,8 +16,9 @@ import { Recipe } from './recipe/recipe';
   styleUrl: './recipes.scss',
 })
 export class Recipes implements OnInit {
-  private apiRecipesService = inject(ApiRecipes);
+  private readonly apiRecipesService = inject(ApiRecipes);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   private recipes = this.apiRecipesService.recipes;
 
@@ -39,11 +41,14 @@ export class Recipes implements OnInit {
    */
   private getRecipes(): void {
     this.isLoading.set(true);
-    this.apiRecipesService.getRecipes().subscribe((res) => {
-      this.isLoading.set(false);
-      this.apiRecipesService.recipes.set(res);
-      this.filteredRecipes.set(res);
-    });
+    this.apiRecipesService
+      .getRecipes()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        this.isLoading.set(false);
+        this.apiRecipesService.recipes.set(res);
+        this.filteredRecipes.set(res);
+      });
   }
 
   /**
