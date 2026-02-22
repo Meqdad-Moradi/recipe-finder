@@ -26,8 +26,9 @@ import { Button } from '../../apps/button/button';
 export class Guests implements OnInit {
   private readonly guestApiService = inject(ApiGuests);
 
-  private guests = signal<IGuest[]>([]);
+  private guests = this.guestApiService.guests;
   public filteredGuests = this.guestApiService.guests;
+
   public openMenuId = signal<number | null>(null);
   public editingGuest = signal<IGuest | null>(null);
   public selectedFilterValue = signal<string>('');
@@ -67,7 +68,6 @@ export class Guests implements OnInit {
         this.isLoading.set(false);
         const reversedGuests = guests.reverse();
         this.guestApiService.guests.set(reversedGuests);
-        this.guests.set(reversedGuests);
       },
       error: (error) => {
         console.error('Error loading guests:', error);
@@ -196,6 +196,7 @@ export class Guests implements OnInit {
   public editGuest(guest: IGuest): void {
     this.editingGuest.set(guest);
     this.closeMenu();
+    this.onToggleShowForm();
   }
 
   /**
