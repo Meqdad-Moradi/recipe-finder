@@ -1,26 +1,25 @@
+import { NgClass } from '@angular/common';
 import {
   Component,
+  effect,
   ElementRef,
   inject,
+  input,
   output,
   signal,
   viewChild,
-  input,
-  effect,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
+import { form, FormField } from '@angular/forms/signals';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { IGuest } from '../../../modules/guests-module';
+  createInitialGuest,
+  guestSchema,
+  IGuest,
+} from '../../../modules/guests-module';
 
 @Component({
   selector: 'app-add-guest-form',
-  imports: [FormsModule, ReactiveFormsModule, NgClass],
+  imports: [NgClass, FormField],
   templateUrl: './add-guest-form.html',
   styleUrl: './add-guest-form.scss',
 })
@@ -34,7 +33,9 @@ export class AddGuestForm {
   readonly updateGuest = output<IGuest>();
   readonly cancel = output<void>();
 
-  public guestForm: FormGroup;
+  readonly guestModel = signal<IGuest>(createInitialGuest());
+
+  public guestForm = form(this.guestModel, guestSchema);
   public fixedFoodPrice = signal<number>(13);
   public isEditingPrice = signal<boolean>(false);
   public isEditing = signal<boolean>(false);
@@ -44,19 +45,6 @@ export class AddGuestForm {
   readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
 
   constructor() {
-    this.guestForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      guestCount: [2, [Validators.required, Validators.min(1)]],
-      foodPrice: [13, { disabled: true }],
-      isPresent: [true],
-      invited: [false],
-      gemeinde: ['', [Validators.required]],
-      phone: [
-        '',
-        [Validators.required, Validators.pattern(/^[\d\s\-\+\(\)]+$/)],
-      ],
-    });
-
     // Watch for changes to editingGuest input
     effect(() => {
       const guest = this.editingGuest();
@@ -73,7 +61,8 @@ export class AddGuestForm {
   public loadEditGuest(guest: IGuest): void {
     this.isEditing.set(true);
     this.fixedFoodPrice.set(Number(guest.foodPrice));
-    this.guestForm.patchValue({
+    this.guestModel.set({
+      id: guest.id,
       name: guest.name,
       guestCount: guest.guestCount,
       foodPrice: guest.foodPrice,
@@ -128,20 +117,19 @@ export class AddGuestForm {
   public onSubmit(e: Event): void {
     e.preventDefault();
 
-    if (this.guestForm.invalid) {
-      this.guestForm.markAllAsTouched();
+    if (this.guestForm().invalid()) {
       return;
     }
 
     const guestData: IGuest = {
       id: this.isEditing() ? this.editingGuest()?.id || 0 : 0,
-      name: this.guestForm?.value?.name,
-      guestCount: Number(this.guestForm?.value?.guestCount),
-      foodPrice: Number(this.guestForm?.value?.foodPrice),
-      isPresent: this.guestForm?.value?.isPresent,
-      gemeinde: this.guestForm?.value?.gemeinde,
-      invited: this.guestForm?.value?.invited,
-      phone: this.guestForm?.value?.phone,
+      name: this.guestForm().value.name,
+      guestCount: Number(this.guestForm().value().guestCount),
+      foodPrice: Number(this.guestForm().value().foodPrice),
+      isPresent: this.guestForm().value().isPresent,
+      gemeinde: this.guestForm().value().gemeinde,
+      invited: this.guestForm().value().invited,
+      phone: this.guestForm().value().phone,
     };
 
     // set the fixed food price
@@ -165,14 +153,9 @@ export class AddGuestForm {
    * Reset the form to its initial state and focus the name input field
    */
   private reset(): void {
-    this.guestForm.reset({
-      name: '',
-      guestCount: 2,
+    this.guestModel.set({
+      ...createInitialGuest(),
       foodPrice: this.fixedFoodPrice(),
-      isPresent: true,
-      gemeinde: '',
-      invited: false,
-      phone: '',
     });
     this.isEditingPrice.set(false);
     this.isEditing.set(false);

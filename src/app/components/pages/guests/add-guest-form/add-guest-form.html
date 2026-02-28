@@ -1,9 +1,5 @@
 <div class="mt-8 mb-12">
-  <form
-    [formGroup]="guestForm"
-    (ngSubmit)="onSubmit($event)"
-    class="bg-white rounded-xl shadow-md p-6"
-  >
+  <form (ngSubmit)="onSubmit($event)" class="bg-white rounded-xl shadow-md p-6">
     <!-- Row 1: Name Input (Full Width) -->
     <div class="mb-6">
       <div class="flex flex-col relative">
@@ -14,17 +10,18 @@
           #nameInput
           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors placeholder:text-gray-400"
           type="text"
-          formControlName="name"
+          [formField]="guestForm.name"
           placeholder="Enter name"
           id="name"
         />
-        @if (guestForm.get('name')?.hasError('required') &&
-        guestForm.get('name')?.touched) {
-        <p
-          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
-        >
-          Name is required
-        </p>
+        @if (guestForm.name().invalid() && guestForm.name().touched()) {
+          @for (error of guestForm.name().errors(); track error.kind) {
+            <p
+              class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+            >
+              {{ error.message }}
+            </p>
+          }
         }
       </div>
     </div>
@@ -39,12 +36,12 @@
         <div class="flex flex-col relative">
           <select
             class="appearance-none px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors"
-            formControlName="gemeinde"
+            [formField]="guestForm.gemeinde"
             id="gemeinde"
           >
             <option value="" disabled>Select Gemeinde</option>
             @for (gemeinde of gemeinden(); track gemeinde) {
-            <option [value]="gemeinde">{{ gemeinde }}</option>
+              <option [value]="gemeinde">{{ gemeinde }}</option>
             }
           </select>
           <!-- Custom chevron icon -->
@@ -65,13 +62,14 @@
             </svg>
           </div>
         </div>
-        @if (guestForm.get('gemeinde')?.hasError('required') &&
-        guestForm.get('gemeinde')?.touched) {
-        <p
-          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
-        >
-          Gemeinde is required
-        </p>
+        @if (guestForm.gemeinde().errors() && guestForm.gemeinde().touched()) {
+          @for (error of guestForm.gemeinde().errors(); track error.kind) {
+            <p
+              class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+            >
+              {{ error.message }}
+            </p>
+          }
         }
       </div>
 
@@ -83,17 +81,19 @@
         <input
           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors"
           type="number"
-          formControlName="guestCount"
-          min="1"
+          [formField]="guestForm.guestCount"
           id="guestCount"
         />
-        @if (guestForm.get('guestCount')?.hasError('min') &&
-        guestForm.get('guestCount')?.touched) {
-        <p
-          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
-        >
-          Minimum 1 guest
-        </p>
+        @if (
+          guestForm.guestCount().errors() && guestForm.guestCount().touched()
+        ) {
+          @for (error of guestForm.guestCount().errors(); track error.kind) {
+            <p
+              class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+            >
+              {{ error.message }}
+            </p>
+          }
         }
       </div>
 
@@ -105,79 +105,82 @@
         <div class="relative">
           <input
             #foodPriceInput
-            type="text"
-            formControlName="foodPrice"
-            [readonly]="!isEditingPrice()"
+            type="number"
+            [formField]="guestForm.foodPrice"
             class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 font-semibold focus:outline-none"
-            [ngClass]="!isEditingPrice() ? 'cursor-not-allowed':'focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors'"
+            [ngClass]="
+              !isEditingPrice()
+                ? 'cursor-not-allowed'
+                : 'focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors'
+            "
           />
           @if (!isEditingPrice()) {
-          <button
-            type="button"
-            (click)="enableEditPrice()"
-            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-            title="Edit price"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              type="button"
+              (click)="enableEditPrice()"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+              title="Edit price"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              ></path>
-            </svg>
-          </button>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                ></path>
+              </svg>
+            </button>
           } @else {
-          <div class="absolute right-1 top-1/2 -translate-y-1/2 flex gap-1">
-            <button
-              type="button"
-              (click)="savePrice()"
-              class="p-1 text-green-600 hover:text-green-700 transition-colors cursor-pointer"
-              title="Save price"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex gap-1">
+              <button
+                type="button"
+                (click)="savePrice()"
+                class="p-1 text-green-600 hover:text-green-700 transition-colors cursor-pointer"
+                title="Save price"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </button>
-            <button
-              type="button"
-              (click)="cancelEditPrice()"
-              class="p-1 text-gray-600 hover:text-gray-700 transition-colors cursor-pointer"
-              title="Cancel"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                type="button"
+                (click)="cancelEditPrice()"
+                class="p-1 text-gray-600 hover:text-gray-700 transition-colors cursor-pointer"
+                title="Cancel"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </button>
+            </div>
           }
         </div>
       </div>
@@ -190,24 +193,18 @@
         <input
           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-900 focus:ring-2 focus:ring-green-900 focus:ring-opacity-20 transition-colors placeholder:text-gray-400"
           type="tel"
-          formControlName="phone"
+          [formField]="guestForm.phone"
           placeholder="+41 79 123 45 67"
           id="phone"
         />
-        @if (guestForm.get('phone')?.hasError('required') &&
-        guestForm.get('phone')?.touched) {
-        <p
-          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
-        >
-          Phone number is required
-        </p>
-        } @else if (guestForm.get('phone')?.hasError('pattern') &&
-        guestForm.get('phone')?.touched) {
-        <p
-          class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
-        >
-          Invalid phone format
-        </p>
+        @if (guestForm.phone().errors() && guestForm.phone().touched()) {
+          @for (error of guestForm.phone().errors(); track error.kind) {
+            <p
+              class="error-message absolute top-full left-0 text-red-600 text-xs mt-1"
+            >
+              {{ error.message }}
+            </p>
+          }
         }
       </div>
     </div>
@@ -218,7 +215,7 @@
         <div class="flex items-center gap-2">
           <input
             type="checkbox"
-            formControlName="isPresent"
+            [formField]="guestForm.isPresent"
             id="isPresent"
             class="w-4 h-4 rounded cursor-pointer accent-green-900"
           />
@@ -234,7 +231,7 @@
         <div class="flex items-center gap-2">
           <input
             type="checkbox"
-            formControlName="invited"
+            [formField]="guestForm.invited"
             id="invited"
             class="w-4 h-4 rounded cursor-pointer accent-green-900"
           />
@@ -251,7 +248,7 @@
     <div class="flex gap-4">
       <button
         type="submit"
-        [disabled]="guestForm.invalid"
+        [disabled]="guestForm().invalid()"
         class="flex-1 flex items-center justify-center gap-2 bg-green-900 text-white rounded-lg px-4 py-2 hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold cursor-pointer"
       >
         <svg
@@ -262,45 +259,45 @@
           xmlns="http://www.w3.org/2000/svg"
         >
           @if (isEditing()) {
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
-          ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
           } @else {
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            ></path>
           }
         </svg>
-        {{ isEditing() ? 'Update Guest' : 'Add Guest' }}
+        {{ isEditing() ? "Update Guest" : "Add Guest" }}
       </button>
       @if (isEditing()) {
-      <button
-        type="button"
-        (click)="cancelEdit()"
-        class="flex-1 flex items-center justify-center gap-2 bg-gray-400 text-white rounded-lg px-4 py-2 hover:bg-gray-500 transition-colors font-semibold cursor-pointer"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+        <button
+          type="button"
+          (click)="cancelEdit()"
+          class="flex-1 flex items-center justify-center gap-2 bg-gray-400 text-white rounded-lg px-4 py-2 hover:bg-gray-500 transition-colors font-semibold cursor-pointer"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
-        </svg>
-        Cancel
-      </button>
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+          Cancel
+        </button>
       }
     </div>
   </form>
