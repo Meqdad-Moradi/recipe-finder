@@ -26,8 +26,8 @@ import { Button } from '../../apps/button/button';
 export class Guests implements OnInit {
   private readonly guestApiService = inject(ApiGuests);
 
-  private guests = this.guestApiService.guests;
-  public filteredGuests = this.guestApiService.guests;
+  private guests = signal<IGuest[]>([]);
+  public filteredGuests = signal<IGuest[]>([]);
 
   public openMenuId = signal<number | null>(null);
   public editingGuest = signal<IGuest | null>(null);
@@ -67,7 +67,8 @@ export class Guests implements OnInit {
       next: (guests) => {
         this.isLoading.set(false);
         const reversedGuests = guests.reverse();
-        this.guestApiService.guests.set(reversedGuests);
+        this.guests.set(reversedGuests);
+        this.filteredGuests.set(reversedGuests);
       },
       error: (error) => {
         console.error('Error loading guests:', error);
@@ -96,23 +97,16 @@ export class Guests implements OnInit {
   );
 
   /**
-   * onToggleShowForm
-   */
-  public onToggleShowForm(): void {
-    this.isFormShowing.set(!this.isFormShowing());
-  }
-
-  /**
    * getPresentGuestCount
    * Get count of present guests
    */
-  public getPresentGuestCount(): number {
-    return this.guests()
+  public getPresentGuestCount = computed<number>(() => {
+    return this.filteredGuests()
       .filter((g) => g.isPresent)
       .reduce((total, guest) => {
         return total + guest.guestCount;
       }, 0);
-  }
+  });
 
   /**
    * allGuests
@@ -148,7 +142,7 @@ export class Guests implements OnInit {
 
     this.guestApiService.addGuest(newGuest).subscribe({
       next: (guest) => {
-        this.guestApiService.guests.update((guests) => [guest, ...guests]);
+        this.filteredGuests.update((guests) => [guest, ...guests]);
       },
       error: (error) => {
         console.error('Error adding guest:', error);
@@ -163,7 +157,7 @@ export class Guests implements OnInit {
   public removeGuest(id: number): void {
     this.guestApiService.removeGuest(id).subscribe({
       next: () => {
-        this.guestApiService.guests.update((guests) =>
+        this.filteredGuests.update((guests) =>
           guests.filter((g) => g.id !== id),
         );
       },
@@ -171,6 +165,65 @@ export class Guests implements OnInit {
         console.error('Error removing guest:', error);
       },
     });
+  }
+
+  /**
+   * updateGuestData
+   * Update guest data in the backend
+   */
+  public updateGuestData(updatedGuest: IGuest): void {
+    this.guestApiService.updateGuest(updatedGuest).subscribe({
+      next: (updated) => {
+        this.filteredGuests.update((guests) =>
+          guests.map((g) => (g.id === updated.id ? updated : g)),
+        );
+        this.editingGuest.set(null);
+      },
+      error: (error) => {
+        console.error('Error updating guest:', error);
+      },
+    });
+  }
+
+  /**
+   * updateSelectedGuestFlag
+   * @param id number
+   * @param option string - guest option
+   * @returns void
+   */
+  private updateSelectedGuestFlag(id: number, option: string): void {
+    const guest = this.filteredGuests().find((g) => g.id === id);
+    if (!guest) return;
+
+    const updatedGuest: IGuest = {
+      ...guest,
+      [option]: !guest[option as keyof IGuest],
+    };
+
+    this.updateGuestData(updatedGuest);
+  }
+
+  /**
+   * togglePresent
+   * Toggle guest present state and update in backend
+   */
+  public togglePresent(id: number): void {
+    this.updateSelectedGuestFlag(id, 'isPresent');
+  }
+
+  /**
+   * toggleInvited
+   * Toggle guest invited state and update in backend
+   */
+  public toggleInvited(id: number): void {
+    this.updateSelectedGuestFlag(id, 'invited');
+  }
+
+  /**
+   * onToggleShowForm
+   */
+  public onToggleShowForm(): void {
+    this.isFormShowing.set(!this.isFormShowing());
   }
 
   /**
@@ -205,66 +258,6 @@ export class Guests implements OnInit {
    */
   public cancelEditGuest(): void {
     this.editingGuest.set(null);
-  }
-
-  /**
-   * updateGuestData
-   * Update guest data in the backend
-   */
-  public updateGuestData(updatedGuest: IGuest): void {
-    this.guestApiService.updateGuest(updatedGuest).subscribe({
-      next: (guest) => {
-        this.guestApiService.guests.update((guests) =>
-          guests.map((g) => (g.id === guest.id ? guest : g)),
-        );
-        this.editingGuest.set(null);
-      },
-      error: (error) => {
-        console.error('Error updating guest:', error);
-      },
-    });
-  }
-
-  /**
-   * togglePresent
-   * Toggle guest present state and update in backend
-   */
-  public togglePresent(id: number): void {
-    const guest = this.guests().find((g) => g.id === id);
-    if (!guest) return;
-
-    const updatedGuest: IGuest = { ...guest, isPresent: !guest.isPresent };
-    this.guestApiService.updateGuest(updatedGuest).subscribe({
-      next: (updated) => {
-        this.guestApiService.guests.update((guests) =>
-          guests.map((g) => (g.id === id ? updated : g)),
-        );
-      },
-      error: (error) => {
-        console.error('Error updating guest:', error);
-      },
-    });
-  }
-
-  /**
-   * toggleInvited
-   * Toggle guest invited state and update in backend
-   */
-  public toggleInvited(id: number): void {
-    const guest = this.guests().find((g) => g.id === id);
-    if (!guest) return;
-
-    const updatedGuest: IGuest = { ...guest, invited: !guest.invited };
-    this.guestApiService.updateGuest(updatedGuest).subscribe({
-      next: (updated) => {
-        this.guestApiService.guests.update((guests) =>
-          guests.map((g) => (g.id === id ? updated : g)),
-        );
-      },
-      error: (error) => {
-        console.error('Error updating guest:', error);
-      },
-    });
   }
 
   /**
@@ -397,18 +390,20 @@ export class Guests implements OnInit {
       this.filteredGuests.set(this.guests());
       return;
     }
-
     this.filteredGuests.update(() =>
       this.guests().filter((guest) => {
         // Check if guest name includes any of the search terms
         const matchSearch = this.searchTerms().every((term) =>
           guest.name.toLowerCase().includes(term),
         );
+
         // Check if guest's gemeinde matches the selected filter or if no filter is selected
+        const gemeindeLower = guest.gemeinde.toLowerCase();
+        const filterOptionLower =
+          this.selectedFilterValue().toLowerCase() || '';
+
         const matchGemeinde =
-          guest.gemeinde?.toLowerCase() ===
-            this.selectedFilterValue().toLowerCase() ||
-          this.selectedFilterValue() === '';
+          !filterOptionLower || gemeindeLower === filterOptionLower;
 
         return matchSearch && matchGemeinde;
       }),

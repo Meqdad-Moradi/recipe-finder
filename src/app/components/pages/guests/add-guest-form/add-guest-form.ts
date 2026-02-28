@@ -122,14 +122,8 @@ export class AddGuestForm {
     }
 
     const guestData: IGuest = {
+      ...this.guestForm().value(),
       id: this.isEditing() ? this.editingGuest()?.id || 0 : 0,
-      name: this.guestForm().value.name,
-      guestCount: Number(this.guestForm().value().guestCount),
-      foodPrice: Number(this.guestForm().value().foodPrice),
-      isPresent: this.guestForm().value().isPresent,
-      gemeinde: this.guestForm().value().gemeinde,
-      invited: this.guestForm().value().invited,
-      phone: this.guestForm().value().phone,
     };
 
     // set the fixed food price
@@ -143,9 +137,6 @@ export class AddGuestForm {
       // Emit add event
       this.addGuest.emit(guestData);
     }
-
-    // Reset the form after submission
-    this.reset();
   }
 
   /**

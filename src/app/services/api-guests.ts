@@ -10,8 +10,6 @@ export class ApiGuests {
   private http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:3000/guests';
 
-  public guests = signal<IGuest[]>([]);
-
   /**
    * Get all guests from the database
    */
