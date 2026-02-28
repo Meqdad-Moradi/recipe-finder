@@ -431,4 +431,12 @@ export class Guests implements OnInit {
       });
     });
   }
+
+  /**
+   * toggleSortOrder
+   * Toggle sort order between ascending and descending
+   */
+  public toggleSortOrder(): void {
+    this.filteredGuests.update((guests) => [...guests].reverse());
+  }
 }

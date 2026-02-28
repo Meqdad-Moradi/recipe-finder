@@ -38,9 +38,11 @@
         [sortOptions]="sortOptions"
         [selectedFilterValue]="selectedFilterValue()"
         [selectedSortValue]="selectedSortValue()"
+        [isSortOrderAsc]="false"
         (searchQueryChange)="searchGuest($event)"
         (selectedFilterValueChange)="filterGuests($event)"
         (selectedSortValueChange)="sortGuests($event)"
+        (isSortOrderAscChange)="toggleSortOrder()"
       ></app-filter-sort>
 
       <div class="bg-white rounded-xl shadow-md mt-2">

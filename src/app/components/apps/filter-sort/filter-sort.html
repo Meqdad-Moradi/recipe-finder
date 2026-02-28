@@ -1,24 +1,68 @@
-<div class="flex flex-wrap items-end justify-between gap-4 text-gray-600">
+<div class="text-gray-600">
   <div class="flex items-center gap-4 font-semibold text-green-900">
-    <span>{{first()}}</span>
+    <span>{{ first() }}</span>
     <div class="text-gray-400">|</div>
-    <span>{{second()}}</span>
+    <span>{{ second() }}</span>
     <div class="text-gray-400">|</div>
-    <span>{{third()}}</span>
+    <span>{{ third() }}</span>
   </div>
 
   <div class="flex items-center justify-between gap-4">
-    <!-- filter control -->
-    <app-dropdown-control
-      [options]="filterOptions()"
-      [(selectValue)]="selectedFilterValue"
-    ></app-dropdown-control>
-    <!-- sort control -->
-    <app-dropdown-control
-      [options]="sortOptions()"
-      [(selectValue)]="selectedSortValue"
-    ></app-dropdown-control>
-    <!-- search control -->
-    <app-custom-search [(searchQuery)]="searchQuery"></app-custom-search>
+    <div class="flex items-center gap-4">
+      <!-- filter control -->
+      <app-dropdown-control
+        [options]="filterOptions()"
+        [(selectValue)]="selectedFilterValue"
+      ></app-dropdown-control>
+      <!-- sort control -->
+      <app-dropdown-control
+        [options]="sortOptions()"
+        [(selectValue)]="selectedSortValue"
+      ></app-dropdown-control>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- search control -->
+      <app-custom-search [(searchQuery)]="searchQuery"></app-custom-search>
+      <!-- ascending/descending order -->
+      <div
+        class="flex items-center cursor-pointer"
+        role="button"
+        tabindex="0"
+        (click)="toggleSortOrder()"
+      >
+        @if (isSortOrderAsc()) {
+          <svg
+            class="w-5 h-5 text-green-900"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 11l5-5m0 0l5 5m-5-5v12"
+            />
+          </svg>
+          <span class="text-sm text-green-900">Ascending</span>
+        } @else {
+          <svg
+            class="w-5 h-5 text-green-900"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 13l-5 5m0 0l-5-5m5 5V6"
+            />
+          </svg>
+          <span class="text-sm text-green-900">Descending</span>
+        }
+      </div>
+    </div>
   </div>
 </div>

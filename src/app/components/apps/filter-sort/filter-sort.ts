@@ -1,4 +1,3 @@
-
 import { Component, input, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CustomSearch } from '../custom-search/custom-search';
@@ -19,4 +18,9 @@ export class FilterSort {
   readonly sortOptions = input.required<string[]>();
   readonly selectedFilterValue = model.required<string>();
   readonly selectedSortValue = model.required<string>();
+  readonly isSortOrderAsc = model.required<boolean>();
+
+  public toggleSortOrder(): void {
+    this.isSortOrderAsc.set(!this.isSortOrderAsc());
+  }
 }
