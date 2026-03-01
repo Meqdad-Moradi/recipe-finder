@@ -26,7 +26,7 @@
 
     <!-- Guests Grid -->
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-green-900 mb-6">Guests List</h2>
+      <h2 class="text-2xl font-bold text-(--primary) mb-6">Guests List</h2>
 
       <!-- Summary -->
       <!-- sort and filter controls -->
@@ -45,10 +45,10 @@
         (isSortOrderAscChange)="toggleSortOrder()"
       ></app-filter-sort>
 
-      <div class="bg-white rounded-xl shadow-md mt-2">
+      <div class="bg-white rounded-xl shadow-md mt-2 overflow-hidden">
         <!-- Table Header -->
         <div
-          class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.666fr_0.55fr_0.2fr] gap-4 bg-green-50 p-4 font-semibold text-gray-700 border-b border-gray-200 min-w-max"
+          class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.666fr_0.55fr_0.2fr] gap-4 bg-(--primary) text-(--fg) px-4 font-semibold border-b border-(--text)/30 min-w-max"
         >
           <div>Guest Name</div>
           <div>Count</div>

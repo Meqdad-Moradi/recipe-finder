@@ -1,5 +1,5 @@
 <div class="text-gray-600">
-  <div class="flex items-center gap-4 font-semibold text-green-900">
+  <div class="flex items-center gap-4 font-semibold text-(--primary)">
     <span>{{ first() }}</span>
     <div class="text-gray-400">|</div>
     <span>{{ second() }}</span>
@@ -33,7 +33,7 @@
       >
         @if (isSortOrderAsc()) {
           <svg
-            class="w-5 h-5 text-green-900"
+            class="w-5 h-5 text-(--primary)"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -45,10 +45,10 @@
               d="M7 11l5-5m0 0l5 5m-5-5v12"
             />
           </svg>
-          <span class="text-sm text-green-900">Ascending</span>
+          <span class="text-sm text-(--primary)">Ascending</span>
         } @else {
           <svg
-            class="w-5 h-5 text-green-900"
+            class="w-5 h-5 text-(--primary)"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -60,7 +60,7 @@
               d="M17 13l-5 5m0 0l-5-5m5 5V6"
             />
           </svg>
-          <span class="text-sm text-green-900">Descending</span>
+          <span class="text-sm text-(--primary)">Descending</span>
         }
       </div>
     </div>

@@ -1,10 +1,10 @@
 <nav class="flex md:flex-row flex-col gap-4 md:gap-8">
   <a
     href="#"
-    class="text-gray-700 hover:text-gray-900 relative pb-1 transition-colors font-medium group md:inline-block"
+    class="text-(--text) hover:text-(--hover) relative pb-1 transition-colors font-medium group md:inline-block"
     routerLink="/"
-    routerLinkActive="text-green-900"
-    [routerLinkActiveOptions]="{exact: true}"
+    routerLinkActive="!text-(--primary)"
+    [routerLinkActiveOptions]="{ exact: true }"
   >
     <span>Home</span>
     <span
@@ -13,15 +13,15 @@
     <span
       class="absolute bottom-0 left-0 h-0.5 bg-orange-500 rounded-full transition-all duration-300"
       [ngClass]="{
-        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/')
+        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/'),
       }"
     ></span>
   </a>
   <a
     href="#"
-    class="text-gray-700 hover:text-gray-900 relative pb-1 transition-colors font-medium group md:inline-block"
+    class="text-(--text) hover:text-(--hover) relative pb-1 transition-colors font-medium group md:inline-block"
     routerLink="/recipes"
-    routerLinkActive="text-green-900"
+    routerLinkActive="!text-(--primary)"
   >
     <span>Recipes</span>
     <span
@@ -30,15 +30,15 @@
     <span
       class="absolute bottom-0 left-0 h-0.5 bg-orange-500 rounded-full transition-all duration-300"
       [ngClass]="{
-        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/recipes')
+        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/recipes'),
       }"
     ></span>
   </a>
   <a
     href="#"
-    class="text-gray-700 hover:text-gray-900 relative pb-1 transition-colors font-medium group md:inline-block"
+    class="text-(--text) hover:text-(--hover) relative pb-1 transition-colors font-medium group md:inline-block"
     routerLink="/favorites"
-    routerLinkActive="text-green-900"
+    routerLinkActive="!text-(--primary)"
   >
     <span>Favorites</span>
     <span
@@ -47,15 +47,15 @@
     <span
       class="absolute bottom-0 left-0 h-0.5 bg-orange-500 rounded-full transition-all duration-300"
       [ngClass]="{
-        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/favorites')
+        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/favorites'),
       }"
     ></span>
   </a>
   <a
     href="#"
-    class="text-gray-700 hover:text-gray-900 relative pb-1 transition-colors font-medium group md:inline-block"
+    class="text-(--text) hover:text-(--hover) relative pb-1 transition-colors font-medium group md:inline-block"
     routerLink="/about"
-    routerLinkActive="text-green-900"
+    routerLinkActive="!text-(--primary)"
   >
     <span>About</span>
     <span
@@ -64,15 +64,15 @@
     <span
       class="absolute bottom-0 left-0 h-0.5 bg-orange-500 rounded-full transition-all duration-300"
       [ngClass]="{
-        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/about')
+        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/about'),
       }"
     ></span>
   </a>
   <a
     href="#"
-    class="text-gray-700 hover:text-gray-900 relative pb-1 transition-colors font-medium group md:inline-block"
+    class="text-(--text) hover:text-(--hover) relative pb-1 transition-colors font-medium group md:inline-block"
     routerLink="/guests"
-    routerLinkActive="text-green-900"
+    routerLinkActive="!text-(--primary)"
   >
     <span>Guests</span>
     <span
@@ -81,7 +81,7 @@
     <span
       class="absolute bottom-0 left-0 h-0.5 bg-orange-500 rounded-full transition-all duration-300"
       [ngClass]="{
-        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/guests')
+        'w-[calc(100%-1rem)] md:w-full': isLinkActive('/guests'),
       }"
     ></span>
   </a>

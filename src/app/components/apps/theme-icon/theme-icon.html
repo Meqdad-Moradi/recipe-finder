@@ -1,5 +1,7 @@
 <button
-  class="hidden md:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-100 focus:outline-none cursor-pointer transition-colors"
+  class="hidden md:block p-2 rounded-lg hover:bg-gray-200 focus:outline-none cursor-pointer transition-colors {{
+    isDarkMode() ? 'hover:bg-yellow-900' : ''
+  }}"
   (click)="toggleDarkMode()"
   [attr.aria-label]="
     isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'
