@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Scroll } from './services/scroll';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +9,4 @@ import { Scroll } from './services/scroll';
 })
 export class App {
   protected title = 'recipe-finder';
-  private scrollService = inject(Scroll);
 }
