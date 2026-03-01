@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Theme } from '../../../services/theme';
 
 @Component({
   selector: 'app-theme-icon',
@@ -7,10 +8,14 @@ import { Component, signal } from '@angular/core';
   styleUrl: './theme-icon.scss',
 })
 export class ThemeIcon {
-  isDarkMode = signal(false);
+  private readonly themeService = inject(Theme);
 
-  toggleDarkMode() {
-    this.isDarkMode.update((prev) => !prev);
-    document.documentElement.classList.toggle('dark');
+  public isDarkMode = computed(() => this.themeService.theme() === 'dark');
+
+  /**
+   * toggleDarkMode
+   */
+  public toggleDarkMode() {
+    this.themeService.toggleTheme();
   }
 }
