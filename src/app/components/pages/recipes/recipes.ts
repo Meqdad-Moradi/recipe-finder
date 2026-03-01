@@ -8,10 +8,18 @@ import { Loading } from '../../apps/loading/loading';
 import { IRecipe } from '../../modules/recipes-module';
 import { Recipe } from './recipe/recipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RestoreScrolling } from '../../../directives/restore-scrolling';
 
 @Component({
   selector: 'app-recipes',
-  imports: [DropdownControl, CustomSearch, Recipe, SectionHeading, Loading],
+  imports: [
+    DropdownControl,
+    CustomSearch,
+    Recipe,
+    SectionHeading,
+    Loading,
+    RestoreScrolling,
+  ],
   templateUrl: './recipes.html',
   styleUrl: './recipes.scss',
 })

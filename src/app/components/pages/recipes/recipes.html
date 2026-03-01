@@ -36,6 +36,7 @@
   @if (!isLoading()) {
     <article
       class="grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-8 mt-7"
+      appRestoreScrolling
     >
       @for (recipe of filteredRecipes(); track recipe.id) {
         <app-recipe
