@@ -1,5 +1,5 @@
 <div
-  class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.666fr_0.55fr_0.2fr] gap-4 px-4 py-2 border-b border-(--text)/30 items-center bg-(--fg) hover:bg-(--fg)/93 transition-colors relative min-w-max"
+  class="grid grid-cols-[1fr_0.4fr_0.55fr_0.5fr_0.5fr_0.666fr_0.55fr_0.2fr] gap-4 px-4 py-2 border-b border-(--text)/30 items-center bg-(--fg) transition-colors relative min-w-max"
 >
   <!-- [class.bg-(--fg)]="!guest().isPresent" -->
   <div class="text-(--text) font-medium">{{ guest().name }}</div>
@@ -22,7 +22,8 @@
     class="px-3 py-1 rounded-lg font-semibold text-sm transition-all duration-300 cursor-pointer"
     [ngClass]="{
       'bg-(--blue)/20 text-(--blue) hover:bg-(--blue)/40': guest().invited,
-      'bg-(--yellow) text-yellow-900 hover:bg-(--hover-yellow)': !guest().invited,
+      'bg-(--yellow-fg) text-(--yellow-text) hover:bg-(--yellow-bg)':
+        !guest().invited,
     }"
   >
     {{ guest().invited ? "✓ Invited" : "✗ Not Invited" }}

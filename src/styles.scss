@@ -13,8 +13,9 @@
   --blue: var(--color-blue-600);
   --light-green: var(--color-green-100);
   --hover-green: var(--color-green-200);
-  --yellow: var(--color-yellow-100);
-  --hover-yellow: var(--color-yellow-200);
+  --yellow-fg: var(--color-yellow-100);
+  --yellow-bg: var(--color-yellow-200);
+  --yellow-text: var(--color-yellow-900);
 }
 
 :root[data-theme="dark"] {
@@ -28,10 +29,11 @@
   --disabled: #303030;
   --red: #f96e6e;
   --blue: var(--color-blue-400);
-  --light-green: var(--color-green-900);
+  --light-green: #193c26;
   --hover-green: var(--color-green-700);
-  --yellow: var(--color-yellow-600);
-  --hover-yellow: var(--color-yellow-500);
+  --yellow-fg: #4b4318;
+  --yellow-bg: #635920;
+  --yellow-text: #f3e8c0;
 }
 
 html {
