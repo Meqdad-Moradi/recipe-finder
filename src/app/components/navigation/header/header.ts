@@ -3,10 +3,11 @@ import { Navbar } from '../navbar/navbar';
 import { Router, RouterLink } from '@angular/router';
 import { Button } from '../../apps/button/button';
 import { ThemeIcon } from '../../apps/theme-icon/theme-icon';
+import { Logo } from "../../apps/logo/logo";
 
 @Component({
   selector: 'app-header',
-  imports: [Navbar, RouterLink, Button, ThemeIcon],
+  imports: [Navbar, RouterLink, Button, ThemeIcon, Logo],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
