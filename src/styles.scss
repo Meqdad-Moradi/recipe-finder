@@ -1,7 +1,7 @@
 @use "tailwindcss";
 
 :root[data-theme="light"] {
-  --bg: #f1f0f0;
+  --bg: #f4f4f4;
   --fg: #fafafa;
   --primary: #064e3b;
   --text: #6b7280;
@@ -19,8 +19,8 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #1c1c1c;
-  --fg: #202020;
+  --bg: #2b2b2b;
+  --fg: #313131;
   --primary: #86efac;
   --text: #bfc7d4;
   --hover: #c9d3e2;
